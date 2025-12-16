@@ -15,6 +15,9 @@
             --border-color: #e0e0e0;
             --hover-color: #f0f0f0;
             --bg-image: none;
+            /* 默认遮罩浓度变量 */
+            --overlay-opacity: 0.5;
+            --bg-overlay-color: 255, 255, 255;
             --global-scale: 0.92;
             --admin-color: #666666;
             --announcement-color: #f9f9f9;
@@ -30,8 +33,6 @@
             --chat-bg: transparent;
             --custom-font: inherit;
             --chat-bubble-color: #ffffff;
-            
-            /* 特殊头像颜色变量 */
             --special-avatar-bg: #ffffff;
         }
 
@@ -53,13 +54,26 @@
         body {
             font-family: var(--custom-font), 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--secondary-color);
-            color: var(--text-color);
-            line-height: 1.5;
             background-image: var(--bg-image);
             background-size: cover;
             background-position: center;
+            background-attachment: fixed;
+            color: var(--text-color);
+            line-height: 1.5;
             padding-bottom: 50px;
             min-height: 100vh;
+            position: relative;
+        }
+        
+        /* 背景遮罩层 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(var(--bg-overlay-color), var(--overlay-opacity));
+            z-index: -1;
+            pointer-events: none;
+            transition: background-color 0.3s ease;
         }
 
         .post-content, .comment-content, .message-text, .profile-bio, .post-author, .comment-author, .message-sender {
@@ -78,8 +92,7 @@
             --pinned-color: #3a3a3a;
             --gray-light: #3a3a3a;
             --chat-bubble-color: var(--dark-card);
-            
-            /* 深色模式下特殊头像变黑 */
+            --bg-overlay-color: 0, 0, 0;
             --special-avatar-bg: #000000;
         }
 
@@ -105,6 +118,9 @@
             top: 0;
             z-index: 100;
             border-bottom: 1px solid var(--border-color);
+            border-radius: 0 0 12px 12px;
+            padding-left: 15px;
+            padding-right: 15px;
         }
 
         .logo {
@@ -206,6 +222,31 @@
             background-color: var(--card-bg);
             color: var(--text-color);
         }
+        
+        /* 滑动条样式 */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            margin: 10px 0;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: var(--gray-medium);
+            border-radius: 3px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -7px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
 
         .post {
             background-color: var(--card-bg);
@@ -238,7 +279,6 @@
             border: 1px solid var(--border-color);
         }
         
-        /* 诅骨 特殊头像样式 */
         .post-avatar.special-avatar {
             background-color: var(--special-avatar-bg) !important;
             border: 1px solid var(--border-color);
@@ -286,18 +326,76 @@
         .admin-badge { background-color: var(--admin-color); color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 8px; }
 
         /* 聊天室样式 */
-        .chat-container { display: grid; grid-template-rows: auto 1fr auto; height: calc(100vh - 180px); background-color: var(--chat-bg); border-radius: 12px; overflow: hidden; }
-        .chat-header { padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background-color: var(--card-bg); border-radius: 12px 12px 0 0; }
-        .chat-messages { padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background-color: var(--chat-bg); }
-        .message { max-width: 75%; padding: 6px 10px; border-radius: 12px; font-size: 13px; display: flex; align-items: flex-start; gap: 6px; }
-        .message.incoming { background-color: var(--chat-bubble-color); align-self: flex-start; border: 1px solid var(--border-color); }
-        .message.outgoing { background-color: var(--chat-bubble-color); color: var(--text-color); align-self: flex-end; flex-direction: row-reverse; border: 1px solid var(--border-color); }
-        .message-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
-        .message-content { flex-grow: 1; }
-        .message-sender { font-weight: 500; font-size: 11px; margin-bottom: 2px; }
-        .message-text { font-size: 13px; word-break: break-all; white-space: pre-wrap; }
-        .chat-input { padding: 10px 15px 15px 15px; display: flex; gap: 10px; background-color: var(--card-bg); border-radius: 0 0 12px 12px; }
+        .chat-container { display: grid; grid-template-rows: auto 1fr auto; height: calc(100vh - 180px); background-color: var(--chat-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .chat-header { padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background-color: var(--card-bg); }
+        .chat-messages { padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background-color: rgba(255,255,255,0.05); }
+        
+        .message { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 13px; display: flex; align-items: flex-start; gap: 6px; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .message.incoming { background-color: var(--chat-bubble-color); align-self: flex-start; border: 1px solid var(--border-color); border-top-left-radius: 2px; }
+        .message.outgoing { background-color: var(--chat-bubble-color); color: var(--text-color); align-self: flex-end; flex-direction: row-reverse; border: 1px solid var(--border-color); border-top-right-radius: 2px; }
+        .message-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid var(--border-color); }
+        .message-content { flex-grow: 1; min-width: 0; }
+        .message-sender { font-weight: 700; font-size: 11px; margin-bottom: 2px; opacity: 0.7; }
+        .message-text { font-size: 14px; word-break: break-all; white-space: pre-wrap; }
+        
+        .message-img { max-width: 100%; max-height: 200px; border-radius: 6px; margin-top: 4px; display: block; cursor: pointer; object-fit: cover; border: 1px solid var(--border-color); }
+        
+        /* 引用样式 */
+        .message-quote {
+            background-color: var(--gray-light);
+            border-left: 3px solid var(--gray-dark);
+            padding: 4px 8px;
+            margin-bottom: 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: var(--gray-dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-input-container {
+            background-color: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-quote-preview {
+            display: none;
+            padding: 8px 15px;
+            background-color: var(--hover-color);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 12px;
+            color: var(--gray-dark);
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-input { padding: 10px 15px 15px 15px; display: flex; gap: 10px; align-items: center; }
         .chat-input input { flex-grow: 1; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 20px; outline: none; font-size: 14px; background-color: var(--gray-light); color: var(--text-color); }
+        .chat-btn-icon { color: var(--gray-dark); cursor: pointer; padding: 8px; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+
+        /* 消息上下文菜单 */
+        .message-context-menu {
+            display: none;
+            position: absolute;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            border-radius: 8px;
+            z-index: 1005;
+            min-width: 100px;
+            overflow: hidden;
+        }
+        .message-context-item {
+            padding: 10px 15px;
+            font-size: 13px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .message-context-item:last-child { border-bottom: none; }
+        .message-context-item:hover { background-color: var(--hover-color); }
 
         /* 发布表单 */
         .publish-form { background-color: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); border: 1px solid var(--border-color); max-width: 500px; margin: 0 auto; }
@@ -324,7 +422,7 @@
         .avatar-preview { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); background-color: var(--gray-light); }
 
         /* 底部导航 */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--card-bg); display: flex; justify-content: space-around; padding: 8px 0; border-top: 1px solid var(--border-color); z-index: 1000; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--card-bg); display: flex; justify-content: space-around; padding: 8px 0; border-top: 1px solid var(--border-color); z-index: 1000; box-shadow: 0 -1px 5px rgba(0,0,0,0.05); }
         #post-detail-page .bottom-nav { display: none !important; }
         .nav-btn { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 5px 10px; border-radius: 8px; font-size: 11px; color: var(--gray-medium); }
         .nav-btn.active { color: var(--primary-color); }
@@ -336,21 +434,33 @@
         .post-detail { background-color: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 15px; }
         .post-detail.no-border { box-shadow: none; border: none; padding: 0; background-color: transparent; }
         .comments-section { margin-top: 20px; padding-bottom: 20px; }
-        .comment { padding: 10px 0; border-bottom: 1px solid var(--border-color); position: relative; }
-        .comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
-        .comment-avatar { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; background-color: var(--gray-light); }
-        .comment-form { display: flex; align-items: center; gap: 10px; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--card-bg); padding: 10px 15px; border-top: 1px solid var(--border-color); z-index: 1002; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+        
+        /* 评论样式更新 */
+        .comment { 
+            padding: 12px; 
+            margin-bottom: 10px;
+            position: relative; 
+            margin-left: 15px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+        
+        .comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .comment-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; background-color: var(--gray-light); border: 1px solid var(--border-color); }
+        .comment-form { display: flex; align-items: center; gap: 10px; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--card-bg); padding: 10px 15px; border-top: 1px solid var(--border-color); z-index: 1002; padding-bottom: calc(10px + env(safe-area-inset-bottom)); box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
         @media (min-width: 600px) { .comment-form { left: 50%; transform: translateX(-50%); max-width: 600px; border-radius: 12px 12px 0 0; } }
         .comment-form input { flex-grow: 1; padding: 10px 15px; border: 1px solid var(--border-color); border-radius: 20px; outline: none; background-color: var(--gray-light); color: var(--text-color); }
         .tab-view { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
         .tab { padding: 8px 15px; cursor: pointer; font-size: 14px; color: var(--gray-medium); }
         .tab.active { color: var(--primary-color); border-bottom: 2px solid var(--primary-color); }
-        .image-viewer { display: none; position: fixed; z-index: 1001; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center; }
-        .image-viewer-content { max-width: 90%; max-height: 90%; }
+        .image-viewer { display: none; position: fixed; z-index: 1001; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.95); justify-content: center; align-items: center; }
+        .image-viewer-content { max-width: 95%; max-height: 90%; }
         .image-viewer-content img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .image-viewer-close { position: absolute; top: 20px; right: 20px; color: white; font-size: 30px; cursor: pointer; }
+        .image-viewer-close { position: absolute; top: 20px; right: 20px; color: white; font-size: 30px; cursor: pointer; background: rgba(0,0,0,0.3); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .image-viewer-nav { position: absolute; top: 50%; width: 100%; display: flex; justify-content: space-between; padding: 0 20px; transform: translateY(-50%); }
-        .image-viewer-nav button { background-color: rgba(255, 255, 255, 0.5); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; }
+        .image-viewer-nav button { background-color: rgba(255, 255, 255, 0.3); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; color: white; }
 
         /* 设置页面 */
         .settings-form { background-color: var(--card-bg); border-radius: 12px; padding: 20px; display: grid; gap: 15px; border: 1px solid var(--border-color); }
@@ -363,8 +473,8 @@
         input:checked + .slider:before { transform: translateX(30px); }
 
         /* 梦境电台 */
-        .dream-radio { position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px; background-color: var(--card-bg); border: 2px solid var(--border-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 900; cursor: grab; touch-action: none; user-select: none; }
-        .dream-radio:active { cursor: grabbing; }
+        .dream-radio { position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px; background-color: var(--card-bg); border: 2px solid var(--border-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 900; cursor: grab; touch-action: none; user-select: none; transition: transform 0.2s; }
+        .dream-radio:active { cursor: grabbing; transform: scale(0.95); }
         .dream-radio.hidden { display: none; }
         .music-bars { display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 30px; width: 30px; }
         .music-bar { width: 4px; background-color: var(--gray-dark); animation: music-bounce 1s infinite; border-radius: 2px; }
@@ -400,7 +510,7 @@
             <div class="music-bar"></div>
             <div class="music-bar"></div>
         </div>
-        <audio id="dream-audio" loop>
+        <audio id="dream-audio" loop preload="auto">
             <source src="https://actions.google.com/sounds/v1/weather/rain_heavy_loud.ogg" type="audio/ogg">
         </audio>
     </div>
@@ -412,6 +522,11 @@
         <div class="sound-item" data-sound="beach">🏖️ 海浪</div>
         <div class="sound-item" data-sound="coffee">☕ 咖啡厅</div>
         <div class="sound-item" data-sound="wind">💨 风声</div>
+    </div>
+    
+    <!-- 消息右键菜单 -->
+    <div class="message-context-menu" id="message-context-menu">
+        <div class="message-context-item" id="quote-msg-btn">引用消息</div>
     </div>
 
     <!-- 主应用页面 -->
@@ -520,9 +635,19 @@
                         <div class="system-message" style="text-align:center; font-size:12px; color:var(--gray-medium); margin:8px 0;">欢迎来到聊天室</div>
                     </div>
                     
-                    <div class="chat-input">
-                        <input type="text" placeholder="输入消息..." id="message-input" disabled>
-                        <button class="btn" id="send-message" disabled><i class="fas fa-paper-plane"></i></button>
+                    <div class="chat-input-container">
+                        <div class="chat-quote-preview" id="chat-quote-preview">
+                            <span id="quote-text-preview"></span>
+                            <i class="fas fa-times" id="cancel-quote" style="cursor:pointer;"></i>
+                        </div>
+                        <div class="chat-input">
+                            <label for="chat-image-input" class="chat-btn-icon">
+                                <i class="far fa-image"></i>
+                            </label>
+                            <input type="file" id="chat-image-input" accept="image/*" style="display:none">
+                            <input type="text" placeholder="输入消息..." id="message-input" disabled>
+                            <button class="btn" id="send-message" disabled><i class="fas fa-paper-plane"></i></button>
+                        </div>
                     </div>
                 </div>
                 
@@ -617,13 +742,37 @@
                             <span class="slider"></span>
                         </label>
                     </div>
+
+                    <div class="form-group" style="margin-top: 10px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+                        <h4>背景设置</h4>
+                        
+                        <div style="margin-top:10px;">
+                            <label for="bg-image-input" style="font-size:13px; color:var(--gray-dark);">背景图片链接</label>
+                            <input type="text" id="bg-image-input" placeholder="http://...">
+                            <div style="display:flex; gap:10px; margin-top:5px;">
+                                 <button class="btn btn-gray" onclick="document.getElementById('bg-file-input').click()" style="flex:1;">
+                                    <i class="fas fa-upload"></i> 上传
+                                 </button>
+                                 <button class="btn" id="apply-bg-btn" style="flex:1;">应用</button>
+                            </div>
+                            <input type="file" id="bg-file-input" accept="image/*" style="display:none;">
+                        </div>
+                        
+                        <div style="margin-top:15px;">
+                            <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+                                <label>背景遮罩浓度</label>
+                                <span id="opacity-val">50%</span>
+                            </div>
+                            <input type="range" id="bg-opacity-slider" min="0" max="1" step="0.05" value="0.5">
+                            <div style="font-size:11px; color:var(--gray-medium);">0%=完全清晰背景，100%=纯色背景</div>
+                        </div>
+                    </div>
                     
-                    <!-- 新增数据导入导出功能 -->
-                    <div class="settings-option" style="flex-direction: column; align-items: flex-start; gap:10px;">
+                    <div class="settings-option" style="flex-direction: column; align-items: flex-start; gap:10px; border-top: 1px solid var(--border-color); padding-top:15px; margin-top:0;">
                         <span>数据管理</span>
                         <div style="display:flex; gap:10px; width:100%;">
-                            <button class="btn btn-admin" id="export-data-btn" style="flex:1;"><i class="fas fa-file-export"></i> 导出数据</button>
-                            <button class="btn btn-admin" id="import-data-btn" style="flex:1;"><i class="fas fa-file-import"></i> 导入数据</button>
+                            <button class="btn btn-admin" id="export-data-btn" style="flex:1;"><i class="fas fa-file-export"></i> 导出</button>
+                            <button class="btn btn-admin" id="import-data-btn" style="flex:1;"><i class="fas fa-file-import"></i> 导入</button>
                             <input type="file" id="import-file-input" accept=".json" style="display:none;">
                         </div>
                     </div>
@@ -745,6 +894,9 @@
         let presenceInterval = null;
         let lastHeartbeats = {};
         
+        // 聊天引用变量
+        let currentQuote = null;
+        
         const ADMIN_CODE = 'dream2025';
 
         const soundUrls = {
@@ -755,13 +907,11 @@
             wind: 'https://actions.google.com/sounds/v1/nature/wind_chimes.ogg'
         };
 
-        // 初始化应用
         function initApp() {
             const savedUser = localStorage.getItem('currentUser');
             if (savedUser) {
                 try {
                     currentUser = JSON.parse(savedUser);
-                    // 确保用户 posts 数组存在（修复旧数据问题）
                     if (!Array.isArray(currentUser.posts)) currentUser.posts = [];
                     showAppPage();
                 } catch(e) {
@@ -771,26 +921,33 @@
             } else {
                 createTempUser();
             }
-            
-            // 确保置顶更新日记存在
             ensureUpdateLog();
-
-            // 恢复音频上下文
-            document.body.addEventListener('click', function unlockAudio() {
+            initAudioEngine();
+        }
+        
+        function initAudioEngine() {
+            const unlockAudio = () => {
                 const dreamAudio = document.getElementById('dream-audio');
                 if (dreamAudio) {
-                    dreamAudio.play().then(() => {
-                        dreamAudio.pause();
-                        document.body.removeEventListener('click', unlockAudio);
-                    }).catch(() => {});
+                    const p = dreamAudio.play();
+                    if(p !== undefined) {
+                        p.then(() => {
+                            if (!document.getElementById('dream-radio').classList.contains('playing')) {
+                                dreamAudio.pause();
+                            }
+                        }).catch(() => {});
+                    }
                 }
-            }, { once: true });
+                document.body.removeEventListener('click', unlockAudio);
+                document.body.removeEventListener('touchstart', unlockAudio);
+            };
+            document.body.addEventListener('click', unlockAudio);
+            document.body.addEventListener('touchstart', unlockAudio);
         }
 
-        // 自动创建/更新系统置顶帖子
         function ensureUpdateLog() {
             const systemId = 999999999;
-            const logContent = "1.更新了<br>2.修复了没有bug的问题";
+            const logContent = "1.图片上传清晰度大幅提升<br>2.帖子数实时更新<br>3.背景图透明度优化<br>4.评论样式优化<br>5.音频播放修复";
             const systemPostIndex = allPosts.findIndex(p => p.id === systemId);
 
             if (systemPostIndex === -1) {
@@ -799,13 +956,13 @@
                     author: "诅骨",
                     authorUid: "DEV",
                     authorId: "system_dev",
-                    avatar: "", // 使用 CSS 控制颜色
+                    avatar: "",
                     isAuthorAdmin: true,
                     content: logContent,
                     images: [],
                     location: "Dream System",
                     time: new Date(),
-                    likes: 666,
+                    likes: 1234,
                     comments: [],
                     favorites: 0,
                     liked: false,
@@ -814,14 +971,9 @@
                 };
                 allPosts.unshift(systemPost);
             } else {
-                // 更新现有置顶贴的内容和状态
                 allPosts[systemPostIndex].content = logContent;
                 allPosts[systemPostIndex].isPinned = true;
-                allPosts[systemPostIndex].author = "诅骨"; // 确保名字正确
             }
-            // 不需要每次都保存到LocalStorage，避免频繁写入，只在内存中更新即可，
-            // 或者保存一次以防万一
-            // localStorage.setItem('allPosts', JSON.stringify(allPosts));
         }
 
         function createTempUser() {
@@ -850,10 +1002,10 @@
             notice.style.cssText = `
                 position:fixed; top:20px; left:50%; transform:translateX(-50%);
                 background:rgba(0,0,0,0.8); color:#fff; padding:10px 20px; border-radius:4px;
-                z-index:9999; font-size:14px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                z-index:9999; font-size:14px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); pointer-events:none;
             `;
             document.body.appendChild(notice);
-            setTimeout(() => notice.remove(), 3000);
+            setTimeout(() => notice.remove(), 2500);
         }
 
         // ===== 梦境电台逻辑 =====
@@ -865,15 +1017,17 @@
         let isDown = false, startX, startY, initLeft, initTop;
 
         const onDown = (e) => {
-            isDown = true;
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            startX = clientX; 
-            startY = clientY;
-            const rect = dreamRadio.getBoundingClientRect();
-            initLeft = rect.left; 
-            initTop = rect.top;
-            dreamRadio.style.transition = 'none';
+            if(e.target.closest('.music-bars') || e.target === dreamRadio) {
+                isDown = true;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                startX = clientX; 
+                startY = clientY;
+                const rect = dreamRadio.getBoundingClientRect();
+                initLeft = rect.left; 
+                initTop = rect.top;
+                dreamRadio.style.transition = 'none';
+            }
         };
 
         const onMove = (e) => {
@@ -889,7 +1043,7 @@
 
         const onUp = () => { 
             isDown = false; 
-            dreamRadio.style.transition = 'all 0.3s'; 
+            dreamRadio.style.transition = 'transform 0.2s'; 
         };
 
         dreamRadio.addEventListener('mousedown', onDown);
@@ -907,26 +1061,41 @@
                 dreamRadio.classList.add('hidden');
                 document.getElementById('radioTrigger').style.display = 'block';
             } else {
-                if(dreamAudio.paused) {
-                    const playPromise = dreamAudio.play();
-                    if (playPromise !== undefined) {
-                        playPromise.then(() => {
-                            dreamRadio.classList.remove('paused');
-                            dreamRadio.classList.add('playing');
-                            musicBars.classList.remove('paused');
-                            musicBars.classList.add('playing');
-                        }).catch(error => { console.error(error); showNotice("播放失败，请先与页面交互"); });
-                    }
-                } else {
-                    dreamAudio.pause();
-                    dreamRadio.classList.add('paused');
-                    dreamRadio.classList.remove('playing');
-                    musicBars.classList.add('paused');
-                    musicBars.classList.remove('playing');
-                }
+                toggleAudio();
             }
             lastClickTime = now;
         });
+        
+        function toggleAudio() {
+            if(dreamAudio.paused) {
+                const playPromise = dreamAudio.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        updateAudioUI(true);
+                    }).catch(error => { 
+                        console.error(error); 
+                        showNotice("播放被拦截，请先点击一下页面其他位置"); 
+                    });
+                }
+            } else {
+                dreamAudio.pause();
+                updateAudioUI(false);
+            }
+        }
+        
+        function updateAudioUI(isPlaying) {
+            if(isPlaying) {
+                dreamRadio.classList.remove('paused');
+                dreamRadio.classList.add('playing');
+                musicBars.classList.remove('paused');
+                musicBars.classList.add('playing');
+            } else {
+                dreamRadio.classList.add('paused');
+                dreamRadio.classList.remove('playing');
+                musicBars.classList.add('paused');
+                musicBars.classList.remove('playing');
+            }
+        }
 
         document.getElementById('radioTrigger').addEventListener('dblclick', () => {
             dreamRadio.classList.remove('hidden');
@@ -948,6 +1117,9 @@
             if (!dreamRadio.contains(e.target) && !soundMenu.contains(e.target)) {
                 soundMenu.style.display = 'none';
             }
+            if (e.target.closest('.message-context-menu') === null) {
+                document.getElementById('message-context-menu').style.display = 'none';
+            }
         });
 
         document.querySelectorAll('.sound-item').forEach(item => {
@@ -958,7 +1130,9 @@
                 this.classList.add('active');
                 dreamAudio.src = soundUrls[sound];
                 localStorage.setItem('currentSound', sound);
-                if (!dreamAudio.paused) dreamAudio.play().catch(()=>{});
+                if (document.getElementById('dream-radio').classList.contains('playing')) {
+                     dreamAudio.play().catch(()=>{});
+                }
                 showNotice('声音已切换');
                 soundMenu.style.display = 'none';
             });
@@ -968,7 +1142,6 @@
             initApp();
             initSettings();
             
-            // 绑定数据导入导出事件
             document.getElementById('export-data-btn').addEventListener('click', exportData);
             document.getElementById('import-data-btn').addEventListener('click', () => document.getElementById('import-file-input').click());
             document.getElementById('import-file-input').addEventListener('change', importData);
@@ -987,6 +1160,7 @@
             
             document.getElementById('settings-btn').addEventListener('click', () => switchPage('settings-page'));
             document.getElementById('save-settings-btn').addEventListener('click', saveSettings);
+            
             document.getElementById('apply-music').addEventListener('click', function() {
                 const url = document.getElementById('music-url').value.trim();
                 if(url) {
@@ -1000,6 +1174,27 @@
                     localStorage.clear();
                     location.reload();
                 }
+            });
+            
+            document.getElementById('apply-bg-btn').addEventListener('click', function() {
+                const url = document.getElementById('bg-image-input').value.trim();
+                if(url) applyBackground(url);
+                else applyBackground('none');
+            });
+            document.getElementById('bg-file-input').addEventListener('change', function(e) {
+                if(e.target.files && e.target.files[0]) {
+                    handleImageUpload(e.target.files[0], (base64) => {
+                        applyBackground(base64);
+                    });
+                }
+            });
+            document.getElementById('bg-opacity-slider').addEventListener('input', function() {
+                const val = this.value;
+                document.getElementById('opacity-val').textContent = Math.round(val * 100) + '%';
+                document.documentElement.style.setProperty('--overlay-opacity', val);
+            });
+            document.getElementById('bg-opacity-slider').addEventListener('change', function() {
+                localStorage.setItem('bgOverlayOpacity', this.value);
             });
             
             document.getElementById('back-to-explore').addEventListener('click', function() {
@@ -1050,6 +1245,22 @@
             document.getElementById('send-message').addEventListener('click', sendChatMessage);
             document.getElementById('message-input').addEventListener('keypress', function(e) { if (e.key === 'Enter') sendChatMessage(); });
             
+            document.getElementById('chat-image-input').addEventListener('change', function(e) {
+                if(e.target.files && e.target.files[0]) {
+                    // 聊天图片还是需要保持较小体积以免MQTT断开
+                    handleImageUpload(e.target.files[0], (base64) => {
+                        sendChatImage(base64);
+                    }, 400); // 聊天图片略微调大一点点到400
+                }
+            });
+            document.getElementById('cancel-quote').addEventListener('click', cancelQuote);
+            document.getElementById('quote-msg-btn').addEventListener('click', function() {
+                const author = this.dataset.author;
+                const content = this.dataset.content;
+                setQuote(author, content);
+                document.getElementById('message-context-menu').style.display = 'none';
+            });
+
             document.getElementById('logout-btn').addEventListener('click', logout);
             
             const navBtns = document.querySelectorAll('.nav-btn');
@@ -1084,7 +1295,6 @@
                 });
             });
             
-            // 编辑器工具栏
             document.querySelectorAll('.editor-toolbar button[data-command]').forEach(button => {
                 button.addEventListener('click', function() { document.execCommand(this.dataset.command, false, null); });
             });
@@ -1106,7 +1316,6 @@
                 renderAllPosts();
             });
 
-            // 修改UID和统计数据的功能
             document.getElementById('profile-uid').addEventListener('click', () => {
                 const newUid = prompt('输入新UID:', currentUser.uid);
                 if(newUid && newUid.trim()) { currentUser.uid = newUid.trim(); localStorage.setItem('currentUser', JSON.stringify(currentUser)); updateProfileDisplay(); }
@@ -1119,9 +1328,15 @@
                 const newVal = prompt('输入关注数:', currentUser.following);
                 if(newVal && !isNaN(newVal)) { currentUser.following = parseInt(newVal); localStorage.setItem('currentUser', JSON.stringify(currentUser)); updateProfileDisplay(); }
             });
+            
+            window.addEventListener('beforeunload', function() {
+                if (mqttClient && currentRoom) {
+                    const presenceMsg = JSON.stringify({ uid: currentUser.uid, status: 'leave' });
+                    mqttClient.publish(`dream/presence/${currentRoom}`, presenceMsg);
+                }
+            });
         });
 
-        // ===== 导出/导入功能 =====
         function exportData() {
             const data = {
                 version: 1.0,
@@ -1133,10 +1348,11 @@
                     darkMode: localStorage.getItem('darkMode'),
                     showUid: localStorage.getItem('showUid'),
                     currentSound: localStorage.getItem('currentSound'),
-                    customMusicUrl: localStorage.getItem('customMusicUrl')
+                    customMusicUrl: localStorage.getItem('customMusicUrl'),
+                    bgImage: localStorage.getItem('bgImage'),
+                    bgOverlayOpacity: localStorage.getItem('bgOverlayOpacity')
                 }
             };
-            
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
@@ -1163,6 +1379,8 @@
                         if(data.settings.showUid) localStorage.setItem('showUid', data.settings.showUid);
                         if(data.settings.currentSound) localStorage.setItem('currentSound', data.settings.currentSound);
                         if(data.settings.customMusicUrl) localStorage.setItem('customMusicUrl', data.settings.customMusicUrl);
+                        if(data.settings.bgImage) localStorage.setItem('bgImage', data.settings.bgImage);
+                        if(data.settings.bgOverlayOpacity) localStorage.setItem('bgOverlayOpacity', data.settings.bgOverlayOpacity);
                     }
                     alert('数据导入成功，页面将刷新。');
                     location.reload();
@@ -1172,7 +1390,6 @@
                 }
             };
             reader.readAsText(file);
-            // 重置 input 以便重复选择同一文件
             event.target.value = '';
         }
 
@@ -1184,6 +1401,14 @@
             const customMusicUrl = localStorage.getItem('customMusicUrl');
             if(customMusicUrl) document.getElementById('music-url').value = customMusicUrl;
             
+            const bgImage = localStorage.getItem('bgImage');
+            if(bgImage) applyBackground(bgImage, false);
+            
+            const bgOpacity = localStorage.getItem('bgOverlayOpacity') || '0.5';
+            document.documentElement.style.setProperty('--overlay-opacity', bgOpacity);
+            document.getElementById('bg-opacity-slider').value = bgOpacity;
+            document.getElementById('opacity-val').textContent = Math.round(bgOpacity * 100) + '%';
+            
             document.getElementById('dark-mode-toggle').addEventListener('change', function() {
                 if (this.checked) {
                     document.body.classList.add('dark-mode');
@@ -1194,8 +1419,21 @@
                 }
             });
         }
+        
+        function applyBackground(urlOrBase64, save = true) {
+            if (urlOrBase64 === 'none' || !urlOrBase64) {
+                document.documentElement.style.setProperty('--bg-image', 'none');
+                if(save) localStorage.removeItem('bgImage');
+            } else {
+                const bgVal = urlOrBase64.startsWith('data:') ? `url(${urlOrBase64})` : `url('${urlOrBase64}')`;
+                document.documentElement.style.setProperty('--bg-image', bgVal);
+                if(save) localStorage.setItem('bgImage', urlOrBase64);
+            }
+            if(save) showNotice('背景已更新');
+        }
 
-        function handleImageUpload(file, callback) {
+        // 优化图片上传质量：默认最大宽度1280，质量0.9
+        function handleImageUpload(file, callback, maxWidth = 1280) {
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -1203,13 +1441,14 @@
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
                     let width = img.width, height = img.height;
-                    const maxW = 800, maxH = 800;
-                    if (width > height) { if (width > maxW) { height *= maxW / width; width = maxW; } } 
+                    const maxH = maxWidth;
+                    if (width > height) { if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; } } 
                     else { if (height > maxH) { width *= maxH / height; height = maxH; } }
                     canvas.width = width;
                     canvas.height = height;
                     canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-                    callback(canvas.toDataURL('image/jpeg', 0.7));
+                    // 提升压缩质量到 0.9 (原0.7)
+                    callback(canvas.toDataURL('image/jpeg', 0.9));
                 }
                 img.src = e.target.result;
             }
@@ -1264,17 +1503,12 @@
             });
         }
 
-        // 修改发布逻辑：增加错误捕获和存储检查
         function publishPost() {
             if (!currentUser) { showNotice('请先登录'); return; }
-            
-            // 获取内容，过滤纯空格
             let editor = document.querySelector('.editor-content');
             let content = editor.innerHTML;
             let textOnly = editor.innerText.trim();
-            
             if (!textOnly && selectedImages.length === 0) return showNotice('请输入内容或添加图片');
-            
             try {
                 if(editingPostId) {
                     const postIndex = allPosts.findIndex(p => p.id === editingPostId);
@@ -1301,21 +1535,16 @@
                         likes: 0, comments: [], favorites: 0,
                         liked: false, isFeatured: false, isPinned: false
                     };
-                    
-                    // 确保 currentUser.posts 是数组
                     if(!Array.isArray(currentUser.posts)) currentUser.posts = [];
-                    
                     allPosts.unshift(newPost);
                     currentUser.posts.unshift(newPost.id);
-                    
-                    // 尝试保存
                     localStorage.setItem('allPosts', JSON.stringify(allPosts));
                     localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    
                     showNotice('发布成功！');
+                    
+                    // 帖子数实时更新
+                    updateProfileDisplay();
                 }
-                
-                // 重置表单
                 editor.innerHTML = '';
                 selectedImages = [];
                 currentLocation = '';
@@ -1324,11 +1553,8 @@
                 switchPage('explore-page');
             } catch (e) {
                 console.error("Publish Error:", e);
-                if (e.name === 'QuotaExceededError') {
-                    alert('发布失败：存储空间已满。请尝试减少图片数量或导出数据后清理缓存。');
-                } else {
-                    alert('发布遇到问题，请重试。');
-                }
+                if (e.name === 'QuotaExceededError') alert('发布失败：存储空间已满。请尝试减少图片数量或导出数据后清理缓存。');
+                else alert('发布遇到问题，请重试。');
             }
         }
         
@@ -1375,7 +1601,6 @@
         function renderPinnedPosts() {
             const container = document.getElementById('pinned-posts');
             container.innerHTML = '';
-            // 显示置顶帖，包括系统自动生成的
             allPosts.filter(p => p.isPinned).forEach(p => container.appendChild(createPostElement(p)));
         }
 
@@ -1442,15 +1667,12 @@
         function createPostElement(post) {
             const postEl = document.createElement('div');
             postEl.className = `post ${post.isAnnouncement ? 'announcement' : ''} ${post.isPinned ? 'pinned' : ''}`;
-            
             const timeStr = new Date(post.time).toLocaleString('zh-CN', {month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit'});
             const uidHtml = showUid ? `<div class="post-uid">UID: ${post.authorUid}</div>` : '';
             const locHtml = post.location ? `<div class="post-location"><i class="fas fa-map-marker-alt"></i> ${post.location}</div>` : '';
             
-            // 判断是否为 "诅骨" 以应用特殊头像类
             const isSpecialUser = post.author === '诅骨';
             const specialClass = isSpecialUser ? 'special-avatar' : '';
-            // 如果是特殊用户且没有头像URL，或者就是想要纯色，src可以留空或放透明图
             const avatarSrc = isSpecialUser ? "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" : (post.avatar || '');
 
             let html = `
@@ -1478,9 +1700,7 @@
                 });
                 html += `</div>`;
             }
-
             html += `<div class="post-footer-content">${locHtml}</div>`;
-
             html += `
                 <div class="post-actions">
                     <div class="post-action ${post.liked?'active':''}" onclick="toggleLike(${post.id})">
@@ -1496,14 +1716,12 @@
                         <i class="fas fa-share-alt"></i>
                     </div>
                 </div>`;
-                
             if (currentUser && currentUser.posts.includes(post.id)) {
                 html += `<div class="post-admin-actions">
                     <button class="admin-btn" onclick="editPost(${post.id})"><i class="fas fa-edit"></i> 编辑</button>
                     <button class="admin-btn delete" onclick="deletePost(${post.id})"><i class="fas fa-trash"></i> 删除</button>
                 </div>`;
             }
-
             postEl.innerHTML = html;
             return postEl;
         }
@@ -1523,7 +1741,7 @@
             
             const msg = { sender: currentUser.name, uid: currentUser.uid, avatar: currentUser.avatar, content: shareContent, time: new Date() };
             mqttClient.publish(`dream/chat/${currentRoom}`, JSON.stringify(msg));
-            addChatMessage(currentUser.name, shareContent, 'outgoing', currentUser.avatar);
+            addChatMessage(msg, 'outgoing');
             showNotice('已分享到聊天室');
             switchPage('chat-page');
         };
@@ -1575,6 +1793,8 @@
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
             renderAllPosts();
             showNotice('帖子已删除');
+            // 帖子数实时更新
+            updateProfileDisplay();
         };
 
         window.viewPostDetail = function(id) {
@@ -1603,7 +1823,6 @@
             div.className = 'comment';
             div.dataset.commentId = comment.id;
             
-            // 长按删除
             let pressTimer;
             const startPress = () => { pressTimer = setTimeout(() => {
                 if (currentUser.isAdmin || comment.authorId === currentUser.id) {
@@ -1611,7 +1830,6 @@
                 }
             }, 800); };
             const endPress = () => clearTimeout(pressTimer);
-            
             div.addEventListener('touchstart', startPress);
             div.addEventListener('touchend', endPress);
             div.addEventListener('mousedown', startPress);
@@ -1627,22 +1845,22 @@
                     <div class="comment-time">${new Date(comment.time).toLocaleTimeString()}</div>
                 </div>
                 <div class="comment-content">${comment.content}</div>
-                <div class="comment-actions">
-                    <span class="comment-action" onclick="toggleReply(${comment.id})">回复</span>
-                    <span class="comment-action ${isLiked?'active':''}" onclick="likeComment(${currentPost.id}, ${comment.id})">
+                <div class="comment-actions" style="margin-top:8px; display:flex; gap:15px; font-size:12px; color:var(--gray-medium);">
+                    <span class="comment-action" onclick="toggleReply(${comment.id})" style="cursor:pointer;">回复</span>
+                    <span class="comment-action ${isLiked?'active':''}" onclick="likeComment(${currentPost.id}, ${comment.id})" style="cursor:pointer; color:${isLiked?'var(--primary-color)':''}">
                         <i class="${isLiked?'fas':'far'} fa-heart"></i> ${likeCount || ''}
                     </span>
                 </div>
-                <div class="reply-form" id="reply-form-${comment.id}" style="display:none; padding-left:32px; margin-top:10px; gap:5px;">
-                    <input type="text" id="reply-input-${comment.id}" placeholder="回复...">
-                    <button class="btn" onclick="addReply(${comment.id})" style="padding:8px 12px;border-radius:20px;">发送</button>
+                <div class="reply-form" id="reply-form-${comment.id}" style="display:none; margin-top:10px; gap:5px;">
+                    <input type="text" id="reply-input-${comment.id}" placeholder="回复..." style="font-size:12px; padding:8px;">
+                    <button class="btn" onclick="addReply(${comment.id})" style="padding:6px 12px;border-radius:20px;font-size:12px;">发送</button>
                 </div>
             `;
             if (comment.replies) {
                 comment.replies.forEach(rep => {
                     const repDiv = document.createElement('div');
-                    repDiv.style.cssText = 'margin-left:30px; border-left:2px solid var(--border-color); padding-left:10px; margin-top:5px;';
-                    repDiv.innerHTML = `<div style="font-size:12px;"><span style="font-weight:bold">${rep.author}</span> <span style="color:gray">${new Date(rep.time).toLocaleTimeString()}</span></div><div style="font-size:13px; margin-top:3px;">${rep.content}</div>`;
+                    repDiv.style.cssText = 'margin-left:10px; border-left:2px solid var(--border-color); padding-left:10px; margin-top:8px;';
+                    repDiv.innerHTML = `<div style="font-size:11px;"><span style="font-weight:bold">${rep.author}</span> <span style="color:gray">${new Date(rep.time).toLocaleTimeString()}</span></div><div style="font-size:13px; margin-top:3px;">${rep.content}</div>`;
                     div.appendChild(repDiv);
                 });
             }
@@ -1746,41 +1964,69 @@
                 const topicStr = topic.toString();
                 const msgStr = message.toString();
                 if (topicStr.includes('presence')) {
-                    const uid = msgStr;
-                    lastHeartbeats[uid] = Date.now();
+                    try {
+                        let presenceData;
+                        try {
+                            presenceData = JSON.parse(msgStr);
+                        } catch(e) {
+                            presenceData = { uid: msgStr, status: 'heartbeat' };
+                        }
+                        if (presenceData.status === 'leave') {
+                            delete lastHeartbeats[presenceData.uid];
+                        } else {
+                            lastHeartbeats[presenceData.uid] = Date.now();
+                        }
+                        updateOnlineCount();
+                    } catch(e) {}
                 } else {
                     try {
                         const msg = JSON.parse(msgStr);
                         if (msg.uid !== currentUser.uid) {
-                            addChatMessage(msg.sender, msg.content, 'incoming', msg.avatar);
+                            addChatMessage(msg, 'incoming');
                         }
                     } catch(e){}
                 }
             });
-            
             mqttClient.on('error', (err) => { document.getElementById('room-status').textContent = '连接错误'; });
+        }
+        
+        function updateOnlineCount() {
+            const now = Date.now();
+            let count = 0;
+            for (let uid in lastHeartbeats) {
+                if (now - lastHeartbeats[uid] < 15000) count++;
+                else delete lastHeartbeats[uid];
+            }
+            if (count === 0) count = 1;
+            document.getElementById('online-count').textContent = `在线: ${count}人`;
         }
         
         function startHeartbeat() {
             if (presenceInterval) clearInterval(presenceInterval);
-            if (mqttClient && currentRoom) mqttClient.publish(`dream/presence/${currentRoom}`, currentUser.uid);
-            presenceInterval = setInterval(() => {
-                if (!mqttClient || !currentRoom) return;
-                mqttClient.publish(`dream/presence/${currentRoom}`, currentUser.uid);
-                const now = Date.now();
-                let count = 0;
-                for (let uid in lastHeartbeats) {
-                    if (now - lastHeartbeats[uid] < 15000) count++;
-                    else delete lastHeartbeats[uid];
+            const sendHeartbeat = () => {
+                if (mqttClient && currentRoom) {
+                    const presenceMsg = JSON.stringify({ uid: currentUser.uid, status: 'heartbeat' });
+                    mqttClient.publish(`dream/presence/${currentRoom}`, presenceMsg);
                 }
-                if (count === 0) count = 1;
-                document.getElementById('online-count').textContent = `在线: ${count}人`;
+            };
+            sendHeartbeat();
+            presenceInterval = setInterval(() => {
+                sendHeartbeat();
+                updateOnlineCount();
             }, 5000);
         }
 
         function leaveChatRoom() {
+            if(!confirm("确定要离开房间吗？")) return;
             if (presenceInterval) { clearInterval(presenceInterval); presenceInterval = null; }
-            if (mqttClient) { mqttClient.end(); mqttClient = null; }
+            if (mqttClient && currentRoom) { 
+                const presenceMsg = JSON.stringify({ uid: currentUser.uid, status: 'leave' });
+                mqttClient.publish(`dream/presence/${currentRoom}`, presenceMsg);
+                setTimeout(() => { mqttClient.end(); mqttClient = null; }, 200);
+            } else {
+                if(mqttClient) mqttClient.end();
+                mqttClient = null;
+            }
             document.getElementById('room-status').textContent = '未连接';
             document.getElementById('online-count').textContent = '';
             document.getElementById('join-room').parentElement.style.display = 'flex';
@@ -1789,21 +2035,98 @@
             document.getElementById('send-message').disabled = true;
             currentRoom = null;
         }
-
+        
         function sendChatMessage() {
             const input = document.getElementById('message-input');
             const content = input.value.trim();
             if (!content || !mqttClient || !currentRoom) return;
-            const msg = { sender: currentUser.name, uid: currentUser.uid, avatar: currentUser.avatar, content, time: new Date() };
+            const msg = { 
+                sender: currentUser.name, 
+                uid: currentUser.uid, 
+                avatar: currentUser.avatar, 
+                content, 
+                time: new Date(),
+                quote: currentQuote 
+            };
             mqttClient.publish(`dream/chat/${currentRoom}`, JSON.stringify(msg));
-            addChatMessage(currentUser.name, content, 'outgoing', currentUser.avatar);
+            addChatMessage(msg, 'outgoing');
             input.value = '';
+            cancelQuote();
         }
 
-        function addChatMessage(sender, text, type, avatar) {
+        function sendChatImage(base64) {
+             if (!mqttClient || !currentRoom) return showNotice("请先进入房间");
+             const msg = {
+                 sender: currentUser.name,
+                 uid: currentUser.uid,
+                 avatar: currentUser.avatar,
+                 content: "[图片]",
+                 image: base64,
+                 time: new Date(),
+                 quote: currentQuote
+             };
+             try {
+                mqttClient.publish(`dream/chat/${currentRoom}`, JSON.stringify(msg));
+                addChatMessage(msg, 'outgoing');
+                cancelQuote();
+             } catch(e) { showNotice("图片发送失败，可能过大"); }
+        }
+        
+        function setQuote(author, content) {
+            currentQuote = { author, content };
+            const preview = document.getElementById('chat-quote-preview');
+            const textEl = document.getElementById('quote-text-preview');
+            preview.style.display = 'flex';
+            let displayContent = content;
+            if (content.startsWith('[图片]')) displayContent = '[图片]';
+            else if (content.length > 20) displayContent = content.substring(0, 20) + '...';
+            textEl.textContent = `回复 ${author}: ${displayContent}`;
+            document.getElementById('message-input').focus();
+        }
+        
+        function cancelQuote() {
+            currentQuote = null;
+            document.getElementById('chat-quote-preview').style.display = 'none';
+        }
+
+        function addChatMessage(msgObj, type) {
+            const sender = msgObj.sender;
+            const text = msgObj.content;
+            const avatar = msgObj.avatar;
+            const imgData = msgObj.image;
+            const quote = msgObj.quote;
             const div = document.createElement('div');
             div.className = `message ${type}`;
-            div.innerHTML = `<img src="${avatar||''}" class="message-avatar"> <div class="message-content"><div class="message-sender">${sender}</div><div class="message-text">${text}</div></div>`;
+            let contentHtml = '';
+            if (quote) {
+                let qContent = quote.content;
+                if(qContent.length > 30 && !qContent.startsWith('[图片]')) qContent = qContent.substring(0, 30) + '...';
+                contentHtml += `<div class="message-quote">回复 ${quote.author}: ${qContent}</div>`;
+            }
+            contentHtml += `<div class="message-sender">${sender}</div>`;
+            if (imgData) {
+                contentHtml += `<img src="${imgData}" class="message-img" onclick="openImageViewer(['${imgData}'], 0)">`;
+            } else {
+                contentHtml += `<div class="message-text">${text}</div>`;
+            }
+            div.innerHTML = `<img src="${avatar||''}" class="message-avatar"> <div class="message-content">${contentHtml}</div>`;
+            const showContext = (e) => {
+                e.preventDefault();
+                const menu = document.getElementById('message-context-menu');
+                const quoteBtn = document.getElementById('quote-msg-btn');
+                quoteBtn.dataset.author = sender;
+                quoteBtn.dataset.content = imgData ? '[图片]' : text;
+                let x = e.clientX || e.touches[0].clientX;
+                let y = e.clientY || e.touches[0].clientY;
+                if (x + 100 > window.innerWidth) x = window.innerWidth - 100;
+                menu.style.left = x + 'px';
+                menu.style.top = y + 'px';
+                menu.style.display = 'block';
+            };
+            div.addEventListener('contextmenu', showContext);
+            let touchTimer;
+            div.addEventListener('touchstart', (e) => { touchTimer = setTimeout(() => showContext(e), 600); });
+            div.addEventListener('touchend', () => clearTimeout(touchTimer));
             const container = document.getElementById('chat-messages');
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
