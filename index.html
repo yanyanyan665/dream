@@ -788,6 +788,14 @@
                         <input type="password" id="admin-code-input" placeholder="输入管理码">
                     </div>
                     
+                    <!-- === 新增：自定义 CSS 输入区域 === -->
+<div class="form-group" style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+    <h4>自定义 CSS (美化)</h4>
+    <p style="font-size: 12px; color: var(--gray-medium); margin-bottom: 5px;">在此处输入 CSS 代码可覆盖默认样式：</p>
+    <textarea id="custom-css-input" rows="6" placeholder=".post { border-radius: 20px; } body { font-family: '楷体'; }" style="width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background-color: var(--card-bg); color: var(--text-color); font-family: monospace; resize: vertical;"></textarea>
+</div>
+<!-- === 结束 === -->
+                    
                     <button class="btn btn-block btn-gray" id="clear-cache-btn" style="margin-top:10px;">
                         <i class="fas fa-trash-alt"></i> 清除缓存
                     </button>
@@ -1394,10 +1402,18 @@
         }
 
         function initSettings() {
+            // 1. === 新增：加载自定义 CSS 并应用 ===
+            const savedCss = localStorage.getItem('userCustomCSS') || '';
+            const cssInput = document.getElementById('custom-css-input');
+            if(cssInput) cssInput.value = savedCss;
+            applyCustomCSS(savedCss);
+
+            // 2. === 原有功能：初始化夜间模式 ===
             const darkMode = localStorage.getItem('darkMode') === 'true';
             document.getElementById('dark-mode-toggle').checked = darkMode;
             if (darkMode) document.body.classList.add('dark-mode');
             
+            // 3. === 原有功能：自定义音乐和背景 ===
             const customMusicUrl = localStorage.getItem('customMusicUrl');
             if(customMusicUrl) document.getElementById('music-url').value = customMusicUrl;
             
@@ -1409,6 +1425,7 @@
             document.getElementById('bg-opacity-slider').value = bgOpacity;
             document.getElementById('opacity-val').textContent = Math.round(bgOpacity * 100) + '%';
             
+            // 4. === 事件监听器 ===
             document.getElementById('dark-mode-toggle').addEventListener('change', function() {
                 if (this.checked) {
                     document.body.classList.add('dark-mode');
@@ -1419,8 +1436,19 @@
                 }
             });
         }
-        
-        function applyBackground(urlOrBase64, save = true) {
+
+        // === 新增：应用 CSS 的核心函数 (放在外面) ===
+        function applyCustomCSS(cssContent) {
+            let styleTag = document.getElementById('user-defined-style');
+            if (!styleTag) {
+                styleTag = document.createElement('style');
+                styleTag.id = 'user-defined-style';
+                document.head.appendChild(styleTag);
+            }
+            styleTag.textContent = cssContent;
+        }
+
+            function applyBackground(urlOrBase64, save = true) {
             if (urlOrBase64 === 'none' || !urlOrBase64) {
                 document.documentElement.style.setProperty('--bg-image', 'none');
                 if(save) localStorage.removeItem('bgImage');
@@ -1784,18 +1812,54 @@
             showNotice('正在编辑帖子...');
         };
 
-        window.deletePost = function(id) {
-            if(!confirm("确认删除这条帖子吗？")) return;
-            allPosts = allPosts.filter(p => p.id !== id);
-            localStorage.setItem('allPosts', JSON.stringify(allPosts));
-            currentUser.posts = currentUser.posts.filter(pid => pid !== id);
-            currentUser.favorites = currentUser.favorites.filter(fid => fid !== id);
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            renderAllPosts();
-            showNotice('帖子已删除');
-            // 帖子数实时更新
-            updateProfileDisplay();
-        };
+        /* 修改后的删除逻辑：视觉上立即移除元素 */
+window.deletePost = function(id) {
+    if(!confirm("确认删除这条帖子吗？")) return;
+
+    // === 新增：视觉层立即移除 ===
+    // 尝试找到页面上对应的按钮，并通过它找到父级帖子元素直接移除
+    // 这里的 .admin-btn.delete 是我们在 createPostElement 中定义的删除按钮类
+    const btn = document.querySelector(`.admin-btn.delete[onclick="deletePost(${id})"]`);
+    if(btn) {
+        const postCard = btn.closest('.post');
+        if(postCard) {
+            // 添加一个淡出动画效果（可选，不喜欢可以直接 postCard.remove()）
+            postCard.style.transition = "all 0.3s ease";
+            postCard.style.opacity = "0";
+            postCard.style.transform = "scale(0.9)";
+            setTimeout(() => postCard.remove(), 300); // 动效结束后移除 DOM
+        }
+    }
+    // ========================
+
+    // 数据层处理 (保持原有逻辑，防止刷新后出现)
+    allPosts = allPosts.filter(p => p.id !== id);
+    localStorage.setItem('allPosts', JSON.stringify(allPosts));
+    
+    // 更新当前用户的数据
+    if(currentUser) {
+        currentUser.posts = currentUser.posts.filter(pid => pid !== id);
+        currentUser.favorites = currentUser.favorites.filter(fid => fid !== id);
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    }
+
+    // 提示
+    showNotice('帖子已删除');
+    
+    // 数据层更新个人中心显示 (帖子数 -1)
+    setTimeout(() => {
+        updateProfileDisplay();
+        // 如果不在帖子详情页，且没有找到 DOM 元素移除（为了兜底），则重新渲染列表
+        if (!document.body.classList.contains('post-detail-page')) {
+             // 为了性能，如果刚才已经通过 DOM 移除了，其实不需要立即重新渲染 renderAllPosts
+             // 但为了保证数据同步，我们做一个延时刷新或者仅在未找到 DOM 时刷新
+             if(!btn) renderAllPosts(); 
+        } else {
+            // 如果是在详情页删除，直接返回上一页
+            switchPage('explore-page');
+        }
+    }, 300);
+};
 
         window.viewPostDetail = function(id) {
             currentPost = allPosts.find(p => p.id === id);
@@ -2175,7 +2239,16 @@
             showNotice('资料已更新');
         }
 
-        function saveSettings() { showNotice('设置已保存'); }
+        /* 修改后的保存设置函数 */
+function saveSettings() {
+    // 1. 保存并在当前页面应用 CSS
+    const customCss = document.getElementById('custom-css-input').value;
+    localStorage.setItem('userCustomCSS', customCss);
+    applyCustomCSS(customCss);
+    
+    // 2. 提示保存成功
+    showNotice('设置与自定义样式已保存'); 
+}
         function logout() { if(confirm('退出登录?')) { localStorage.removeItem('currentUser'); location.reload(); } }
     </script>
 </body>
