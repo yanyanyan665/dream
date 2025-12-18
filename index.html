@@ -91,7 +91,7 @@
             --announcement-color: #3a3a3a;
             --pinned-color: #3a3a3a;
             --gray-light: #3a3a3a;
-            --chat-bubble-color: var(--dark-card);
+--chat-bubble-color: var(--dark-card);
             --bg-overlay-color: 0, 0, 0;
             --special-avatar-bg: #000000;
         }
@@ -115,12 +115,12 @@
             justify-content: space-between;
             align-items: center;
             position: sticky;
-            top: 0;
+top: 0;
             z-index: 100;
             border-bottom: 1px solid var(--border-color);
             border-radius: 0 0 12px 12px;
             padding-left: 15px;
-            padding-right: 15px;
+padding-right: 15px;
         }
 
         .logo {
@@ -160,11 +160,7 @@
             left: 15px;
             z-index: 101;
         }
-
-        .back-button:hover {
-            opacity: 0.9;
-        }
-
+        
         #post-detail-page .back-button {
             display: inline-flex;
             align-items: center;
@@ -193,7 +189,7 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: 500;
+font-weight: 500;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -277,7 +273,7 @@
             object-fit: cover;
             background-color: var(--gray-light);
             border: 1px solid var(--border-color);
-        }
+}
         
         .post-avatar.special-avatar {
             background-color: var(--special-avatar-bg) !important;
@@ -289,7 +285,7 @@
         .post-time { font-size: 12px; color: var(--gray-medium); }
         .post-uid { font-size: 11px; color: var(--gray-medium); cursor: pointer; }
         
-        .post-footer-content { margin-bottom: 10px; }
+        .post-footer-content { margin-bottom: 10px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
         .post-location {
             display: inline-flex;
             align-items: center;
@@ -303,6 +299,22 @@
             line-height: 1;
         }
         .post-location i { font-size: 11px; color: var(--gray-medium); }
+.post-collection-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary-color);
+            background-color: rgba(0,0,0,0.04);
+            padding: 4px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+body.dark-mode .post-collection-tag {
+            background-color: rgba(255,255,255,0.08); 
+        }
 
         .post-content { margin-bottom: 12px; font-size: 14px; line-height: 1.6; }
 
@@ -329,71 +341,26 @@
         .chat-container { display: grid; grid-template-rows: auto 1fr auto; height: calc(100vh - 180px); background-color: var(--chat-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .chat-header { padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background-color: var(--card-bg); }
         .chat-messages { padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background-color: rgba(255,255,255,0.05); }
-        
-        .message { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 13px; display: flex; align-items: flex-start; gap: 6px; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+.message { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 13px; display: flex; align-items: flex-start; gap: 6px; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .message.incoming { background-color: var(--chat-bubble-color); align-self: flex-start; border: 1px solid var(--border-color); border-top-left-radius: 2px; }
         .message.outgoing { background-color: var(--chat-bubble-color); color: var(--text-color); align-self: flex-end; flex-direction: row-reverse; border: 1px solid var(--border-color); border-top-right-radius: 2px; }
         .message-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid var(--border-color); }
         .message-content { flex-grow: 1; min-width: 0; }
         .message-sender { font-weight: 700; font-size: 11px; margin-bottom: 2px; opacity: 0.7; }
         .message-text { font-size: 14px; word-break: break-all; white-space: pre-wrap; }
-        
         .message-img { max-width: 100%; max-height: 200px; border-radius: 6px; margin-top: 4px; display: block; cursor: pointer; object-fit: cover; border: 1px solid var(--border-color); }
         
         /* 引用样式 */
-        .message-quote {
-            background-color: var(--gray-light);
-            border-left: 3px solid var(--gray-dark);
-            padding: 4px 8px;
-            margin-bottom: 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            color: var(--gray-dark);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        .message-quote { background-color: var(--gray-light); border-left: 3px solid var(--gray-dark); padding: 4px 8px; margin-bottom: 6px; border-radius: 4px; font-size: 11px; color: var(--gray-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .chat-input-container {
-            background-color: var(--card-bg);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .chat-quote-preview {
-            display: none;
-            padding: 8px 15px;
-            background-color: var(--hover-color);
-            border-bottom: 1px solid var(--border-color);
-            font-size: 12px;
-            color: var(--gray-dark);
-            justify-content: space-between;
-            align-items: center;
-        }
-        
+        .chat-input-container { background-color: var(--card-bg); border-top: 1px solid var(--border-color); display: flex; flex-direction: column; }
+        .chat-quote-preview { display: none; padding: 8px 15px; background-color: var(--hover-color); border-bottom: 1px solid var(--border-color); font-size: 12px; color: var(--gray-dark); justify-content: space-between; align-items: center; }
         .chat-input { padding: 10px 15px 15px 15px; display: flex; gap: 10px; align-items: center; }
         .chat-input input { flex-grow: 1; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 20px; outline: none; font-size: 14px; background-color: var(--gray-light); color: var(--text-color); }
-        .chat-btn-icon { color: var(--gray-dark); cursor: pointer; padding: 8px; font-size: 20px; display: flex; align-items: center; justify-content: center; }
 
         /* 消息上下文菜单 */
-        .message-context-menu {
-            display: none;
-            position: absolute;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            border-radius: 8px;
-            z-index: 1005;
-            min-width: 100px;
-            overflow: hidden;
-        }
-        .message-context-item {
-            padding: 10px 15px;
-            font-size: 13px;
-            cursor: pointer;
-            border-bottom: 1px solid var(--border-color);
-        }
+        .message-context-menu { display: none; position: absolute; background: var(--card-bg); border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.15); border-radius: 8px; z-index: 1005; min-width: 100px; overflow: hidden; }
+        .message-context-item { padding: 10px 15px; font-size: 13px; cursor: pointer; border-bottom: 1px solid var(--border-color); }
         .message-context-item:last-child { border-bottom: none; }
         .message-context-item:hover { background-color: var(--hover-color); }
 
@@ -410,6 +377,26 @@
         .layout-option { padding: 8px 12px; background-color: var(--gray-light); border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; font-size: 12px; }
         .layout-option.active { background-color: var(--primary-color); color: white; }
 
+        /* 合集导航栏样式 */
+        .collections-bar { display: flex; gap: 8px; overflow-x: auto; padding: 10px 5px; margin-bottom: 10px; white-space: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .collections-bar::-webkit-scrollbar { display: none; }
+        .collection-chip { padding: 6px 14px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; font-size: 13px; color: var(--gray-dark); cursor: pointer; flex-shrink: 0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .collection-chip.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+        /* === 新增：搜索框样式 === */
+        #explore-search-container {
+            display: flex;
+            align-items: center;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 5px 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+        #explore-search-container i { color: var(--gray-medium); margin-right: 8px; }
+        #explore-search-input { border: none; background: transparent; width: 100%; padding: 8px 0; outline: none; font-size: 14px; color: var(--text-color); }
+        /* === 结束 === */
+        
         /* 个人中心 */
         .profile-card { background-color: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); border: 1px solid var(--border-color); text-align: center; }
         .profile-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-color); margin: 0 auto 15px; background-color: var(--gray-light); }
@@ -428,25 +415,8 @@
         .nav-btn.active { color: var(--primary-color); }
         .nav-btn i { font-size: 18px; }
 
-        /* 其他组件 */
-        .empty-state { text-align: center; padding: 40px 20px; color: var(--gray-medium); display: flex; flex-direction: column; align-items: center; }
-        .empty-state i { font-size: 40px; margin-bottom: 15px; opacity: 0.5; }
-        .post-detail { background-color: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 15px; }
-        .post-detail.no-border { box-shadow: none; border: none; padding: 0; background-color: transparent; }
-        .comments-section { margin-top: 20px; padding-bottom: 20px; }
-        
         /* 评论样式更新 */
-        .comment { 
-            padding: 12px; 
-            margin-bottom: 10px;
-            position: relative; 
-            margin-left: 15px;
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-        }
-        
+        .comment { padding: 12px; margin-bottom: 10px; margin-left: 15px; background-color: var(--card-bg); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
         .comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
         .comment-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; background-color: var(--gray-light); border: 1px solid var(--border-color); }
         .comment-form { display: flex; align-items: center; gap: 10px; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--card-bg); padding: 10px 15px; border-top: 1px solid var(--border-color); z-index: 1002; padding-bottom: calc(10px + env(safe-area-inset-bottom)); box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
@@ -455,6 +425,14 @@
         .tab-view { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
         .tab { padding: 8px 15px; cursor: pointer; font-size: 14px; color: var(--gray-medium); }
         .tab.active { color: var(--primary-color); border-bottom: 2px solid var(--primary-color); }
+        
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--gray-medium); display: flex; flex-direction: column; align-items: center; }
+        .empty-state i { font-size: 40px; margin-bottom: 15px; opacity: 0.5; }
+        .post-detail { background-color: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 15px; }
+        .post-detail.no-border { box-shadow: none; border: none; padding: 0; background-color: transparent; }
+        .comments-section { margin-top: 20px; padding-bottom: 20px; }
+
+        /* 图片查看器 */
         .image-viewer { display: none; position: fixed; z-index: 1001; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.95); justify-content: center; align-items: center; }
         .image-viewer-content { max-width: 95%; max-height: 90%; }
         .image-viewer-content img { max-width: 100%; max-height: 100%; object-fit: contain; }
@@ -476,6 +454,7 @@
         .dream-radio { position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px; background-color: var(--card-bg); border: 2px solid var(--border-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 900; cursor: grab; touch-action: none; user-select: none; transition: transform 0.2s; }
         .dream-radio:active { cursor: grabbing; transform: scale(0.95); }
         .dream-radio.hidden { display: none; }
+        .dream-radio.force-hidden { display: none !important; }
         .music-bars { display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 30px; width: 30px; }
         .music-bar { width: 4px; background-color: var(--gray-dark); animation: music-bounce 1s infinite; border-radius: 2px; }
         .music-bar:nth-child(1) { animation-delay: 0s; } .music-bar:nth-child(2) { animation-delay: 0.2s; } .music-bar:nth-child(3) { animation-delay: 0.4s; }
@@ -488,6 +467,7 @@
         .sound-item.active { color: var(--primary-color); font-weight: bold; }
         
         .radio-hidden-trigger { position: fixed; bottom: 0; left: 0; width: 100%; height: 30px; z-index: 9999; display: none; }
+        .radio-hidden-trigger.force-hidden { display: none !important; }
         
         .draft-item { background-color: var(--card-bg); border-radius: 8px; padding: 12px; margin-bottom: 10px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
         .draft-actions button { padding: 4px 8px; font-size: 12px; border: none; border-radius: 4px; cursor: pointer; margin-left: 5px; }
@@ -497,6 +477,21 @@
         /* 管理员弹窗 */
         .admin-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
         .admin-modal-content { background-color: var(--card-bg); margin: 15% auto; padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; border: 1px solid var(--border-color); }
+        
+        /* === 新增：账号切换弹窗样式 === */
+        #account-modal .account-list { max-height: 200px; overflow-y: auto; margin-bottom: 15px; }
+        #account-modal .account-item { display: flex; align-items: center; gap: 10px; padding: 10px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
+        #account-modal .account-item:hover { background-color: var(--hover-color); }
+        #account-modal .account-item.active { background-color: rgba(0,0,0,0.05); }
+        body.dark-mode #account-modal .account-item.active { background-color: rgba(255,255,255,0.05); }
+        #account-modal .account-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+        #account-modal .account-info { flex-grow: 1; }
+        #account-modal .account-name { font-weight: bold; font-size: 14px; }
+        #account-modal .account-uid { font-size: 11px; color: var(--gray-medium); }
+        #account-modal .account-action { color: var(--gray-medium); cursor: pointer; }
+        #account-modal .account-action:hover { color: var(--delete-color); }
+        /* === 结束 === */
+        
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .close { color: var(--gray-medium); font-size: 28px; cursor: pointer; }
 
@@ -505,7 +500,7 @@
 <body>
     <!-- 梦境电台 -->
     <div class="dream-radio paused" id="dream-radio" title="双击隐藏，长按右键菜单">
-        <div class="music-bars paused" id="music-bars">
+<div class="music-bars paused" id="music-bars">
             <div class="music-bar"></div>
             <div class="music-bar"></div>
             <div class="music-bar"></div>
@@ -535,7 +530,7 @@
             <div class="logo">
                 <i class="fas fa-moon"></i>
                 <span>Dream</span>
-            </div>
+</div>
             <div class="header-actions">
                 <div class="header-action" id="settings-btn">
                     <i class="fas fa-cog"></i>
@@ -555,6 +550,17 @@
             
             <!-- 发现页面 -->
             <div class="page" id="explore-page">
+                <!-- === 新增：搜索框 === -->
+                <div id="explore-search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="explore-search-input" placeholder="搜索帖子内容、作者...">
+                </div>
+                <!-- === 结束 === -->
+
+                <div class="collections-bar" id="collections-nav" style="display:none;">
+                    <div class="collection-chip active" data-collection="all">全部</div>
+                </div>
+                
                 <div id="explore-posts"></div>
             </div>
             
@@ -577,7 +583,7 @@
                             <option value="Arial">Arial</option>
                             <option value="Times New Roman">Times New Roman</option>
                             <option value="Georgia">Georgia</option>
-                        </select>
+</select>
                         <select id="font-size">
                             <option value="1">小</option>
                             <option value="3" selected>中</option>
@@ -589,6 +595,15 @@
                         <button type="button" id="insert-link" title="插入链接"><i class="fas fa-link"></i></button>
                         <button type="button" id="location-btn" title="添加位置"><i class="fas fa-map-marker-alt"></i></button>
                     </div>
+                    
+                    <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                         <i class="fas fa-layer-group" style="color:var(--gray-dark); font-size: 14px;"></i>
+                         <input type="text" id="collection-input" list="user-collections-list" 
+                                placeholder="输入新建或选择合集 (可选)" 
+                                style="flex:1; padding: 8px 10px; border:1px solid var(--border-color); border-radius: 6px; font-size: 13px;">
+                         <datalist id="user-collections-list"></datalist>
+                    </div>
+
                     <div class="editor-content" contenteditable="true" placeholder="分享你的想法..."></div>
                     
                     <div id="location-display" style="margin-bottom:10px; padding:8px; background-color:var(--gray-light); border-radius:4px; display:none;">
@@ -602,7 +617,7 @@
                         <div class="layout-option" data-layout="single-small">单张小图</div>
                         <div class="layout-option" data-layout="grid">网格布局</div>
                     </div>
-                    
+
                     <div class="image-preview" id="image-preview"></div>
                     
                     <div style="display: flex; gap: 10px; margin-bottom: 15px;">
@@ -634,7 +649,7 @@
                     <div class="chat-messages" id="chat-messages">
                         <div class="system-message" style="text-align:center; font-size:12px; color:var(--gray-medium); margin:8px 0;">欢迎来到聊天室</div>
                     </div>
-                    
+
                     <div class="chat-input-container">
                         <div class="chat-quote-preview" id="chat-quote-preview">
                             <span id="quote-text-preview"></span>
@@ -742,6 +757,23 @@
                             <span class="slider"></span>
                         </label>
                     </div>
+                    
+                    <!-- === 新增：隐藏梦境电台 === -->
+                    <div class="settings-option">
+                        <span>隐藏梦境电台悬浮球</span>
+                        <label class="mode-switch">
+                            <input type="checkbox" id="hide-radio-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <!-- === 结束 === -->
+
+                    <!-- === 新增：账号切换入口 === -->
+                    <div class="settings-option" id="account-switch-option" style="cursor: pointer;">
+                        <span>切换账号 (精分模式)</span>
+                        <i class="fas fa-chevron-right" style="color:var(--gray-medium);"></i>
+                    </div>
+                    <!-- === 结束 === -->
 
                     <div class="form-group" style="margin-top: 10px; border-top: 1px solid var(--border-color); padding-top: 15px;">
                         <h4>背景设置</h4>
@@ -757,7 +789,7 @@
                             </div>
                             <input type="file" id="bg-file-input" accept="image/*" style="display:none;">
                         </div>
-                        
+
                         <div style="margin-top:15px;">
                             <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
                                 <label>背景遮罩浓度</label>
@@ -788,14 +820,12 @@
                         <input type="password" id="admin-code-input" placeholder="输入管理码">
                     </div>
                     
-                    <!-- === 新增：自定义 CSS 输入区域 === -->
-<div class="form-group" style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 15px;">
-    <h4>自定义 CSS (美化)</h4>
-    <p style="font-size: 12px; color: var(--gray-medium); margin-bottom: 5px;">在此处输入 CSS 代码可覆盖默认样式：</p>
-    <textarea id="custom-css-input" rows="6" placeholder=".post { border-radius: 20px; } body { font-family: '楷体'; }" style="width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background-color: var(--card-bg); color: var(--text-color); font-family: monospace; resize: vertical;"></textarea>
-</div>
-<!-- === 结束 === -->
-                    
+                    <div class="form-group" style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+                        <h4>自定义 CSS (美化)</h4>
+                        <p style="font-size: 12px; color: var(--gray-medium); margin-bottom: 5px;">在此处输入 CSS 代码可覆盖默认样式：</p>
+                        <textarea id="custom-css-input" rows="6" placeholder=".post { border-radius: 20px; } body { font-family: '楷体'; }" style="width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background-color: var(--card-bg); color: var(--text-color); font-family: monospace; resize: vertical;"></textarea>
+                    </div>
+
                     <button class="btn btn-block btn-gray" id="clear-cache-btn" style="margin-top:10px;">
                         <i class="fas fa-trash-alt"></i> 清除缓存
                     </button>
@@ -808,7 +838,7 @@
             
            <!-- 帖子详情页面 -->
             <div class="page" id="post-detail-page">
-                <button class="back-button" id="back-to-explore">
+<button class="back-button" id="back-to-explore">
                     <i class="fas fa-arrow-left"></i> 返回
                 </button>
                 <div class="post-detail no-border" id="post-detail"></div>
@@ -864,10 +894,25 @@
             </div>
         </div>
     </div>
+    
+    <!-- === 新增：账号切换模态框 === -->
+    <div id="account-modal" class="admin-modal">
+        <div class="admin-modal-content">
+            <div class="modal-header">
+                <h3>切换账号 (精分模式)</h3>
+                <span class="close" id="close-account-modal">&times;</span>
+            </div>
+            <div class="account-list" id="account-list"></div>
+            <button class="btn btn-block" id="create-account-btn">
+                <i class="fas fa-plus"></i> 创建新账号
+            </button>
+        </div>
+    </div>
+    <!-- === 结束 === -->
 
     <!-- 图片查看器 -->
     <div class="image-viewer" id="image-viewer">
-        <span class="image-viewer-close" id="image-viewer-close">&times;</span>
+<span class="image-viewer-close" id="image-viewer-close">&times;</span>
         <div class="image-viewer-nav">
             <button id="image-viewer-prev"><i class="fas fa-chevron-left"></i></button>
             <button id="image-viewer-next"><i class="fas fa-chevron-right"></i></button>
@@ -876,7 +921,6 @@
             <img src="" alt="查看图片" id="image-viewer-img">
         </div>
     </div>
-
     <script>
         // ===== 全局变量 =====
         let currentUser = null;
@@ -887,6 +931,7 @@
             console.error("Posts corrupted", e);
             allPosts = [];
         }
+        
         let mqttClient = null;
         let currentRoom = null;
         let currentPost = null;
@@ -902,6 +947,19 @@
         let presenceInterval = null;
         let lastHeartbeats = {};
         
+        // 合集相关变量
+        let currentCollectionFilter = 'all'; 
+        let availableCollections = new Set();
+        
+        // === 新增/修改：全局变量 ===
+        let currentSearchTerm = ''; // 当前搜索关键词
+        let hideRadio = localStorage.getItem('hideRadio') === 'true'; // 隐藏电台设置
+        let userAccounts = []; // 多账号列表
+        try {
+            userAccounts = JSON.parse(localStorage.getItem('userAccounts')) || [];
+        } catch(e) { userAccounts = []; }
+        // === 结束 ===
+        
         // 聊天引用变量
         let currentQuote = null;
         
@@ -916,27 +974,127 @@
         };
 
         function initApp() {
+            // === 新增：多账号数据迁移与初始化 ===
             const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
+if (savedUser) {
                 try {
                     currentUser = JSON.parse(savedUser);
                     if (!Array.isArray(currentUser.posts)) currentUser.posts = [];
+                    // 如果当前用户不在账号列表中，加入列表 (数据迁移)
+                    if (userAccounts.length === 0) {
+                        userAccounts.push(currentUser);
+                        localStorage.setItem('userAccounts', JSON.stringify(userAccounts));
+                    } else {
+                        // 确保当前用户信息同步到列表
+                        const idx = userAccounts.findIndex(u => u.uid === currentUser.uid);
+                        if(idx === -1) {
+                            userAccounts.push(currentUser);
+                            localStorage.setItem('userAccounts', JSON.stringify(userAccounts));
+                        }
+                    }
                     showAppPage();
                 } catch(e) {
                     localStorage.removeItem('currentUser');
                     createTempUser();
                 }
             } else {
-                createTempUser();
+                // 如果没有当前用户但有账号列表，自动登录第一个
+                if(userAccounts.length > 0) {
+                    currentUser = userAccounts[0];
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    showAppPage();
+} else {
+                    createTempUser();
+                }
             }
+            // === 结束 ===
+            
             ensureUpdateLog();
             initAudioEngine();
+            refreshCollectionsData(); 
+            applyRadioVisibility(); // 应用隐藏电台设置
         }
         
+        // === 新增：应用隐藏电台设置 ===
+        function applyRadioVisibility() {
+            const radio = document.getElementById('dream-radio');
+            const trigger = document.getElementById('radioTrigger');
+            if (hideRadio) {
+                radio.classList.add('force-hidden');
+                trigger.classList.add('force-hidden');
+                // 如果正在播放停止播放
+                if(document.getElementById('dream-audio')){
+                    document.getElementById('dream-audio').pause();
+                    updateAudioUI(false);
+                }
+            } else {
+                radio.classList.remove('force-hidden');
+                trigger.classList.remove('force-hidden');
+            }
+        }
+        // === 结束 ===
+
+        function refreshCollectionsData() {
+            availableCollections.clear();
+            allPosts.forEach(post => {
+                if (post.collection && post.collection.trim() !== "") {
+                    availableCollections.add(post.collection.trim());
+                }
+            });
+            updateCollectionDatalist();
+        }
+
+        function updateCollectionDatalist() {
+            const datalist = document.getElementById('user-collections-list');
+            datalist.innerHTML = '';
+            availableCollections.forEach(col => {
+                const option = document.createElement('option');
+                option.value = col;
+                datalist.appendChild(option);
+            });
+        }
+        
+        function renderCollectionsNav() {
+            const container = document.getElementById('collections-nav');
+            if (document.getElementById('explore-page').classList.contains('active')) {
+                container.style.display = 'flex';
+            } else {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.innerHTML = '';
+            const allBtn = document.createElement('div');
+            allBtn.className = `collection-chip ${currentCollectionFilter === 'all' ? 'active' : ''}`;
+            allBtn.textContent = '全部';
+            allBtn.onclick = () => filterByCollection('all');
+            container.appendChild(allBtn);
+
+            if (availableCollections.size === 0) return;
+
+            availableCollections.forEach(col => {
+                const chip = document.createElement('div');
+                chip.className = `collection-chip ${currentCollectionFilter === col ? 'active' : ''}`;
+                chip.textContent = col;
+                chip.onclick = () => filterByCollection(col);
+                container.appendChild(chip);
+            });
+        }
+
+        window.filterByCollection = function(collectionName) {
+            currentCollectionFilter = collectionName;
+if (!document.getElementById('explore-page').classList.contains('active')) {
+                switchPage('explore-page');
+            } else {
+                renderCollectionsNav();
+                renderExplorePosts();
+            }
+        };
+
         function initAudioEngine() {
             const unlockAudio = () => {
                 const dreamAudio = document.getElementById('dream-audio');
-                if (dreamAudio) {
+                if (dreamAudio && !hideRadio) { // 只有没隐藏时才尝试播放
                     const p = dreamAudio.play();
                     if(p !== undefined) {
                         p.then(() => {
@@ -955,7 +1113,7 @@
 
         function ensureUpdateLog() {
             const systemId = 999999999;
-            const logContent = "1.图片上传清晰度大幅提升<br>2.帖子数实时更新<br>3.背景图透明度优化<br>4.评论样式优化<br>5.音频播放修复";
+            const logContent = "1.发现页新增搜索功能<br>2.支持多账号创建与切换(精分模式)<br>3.设置新增永久隐藏电台开关<br>4.优化代码结构";
             const systemPostIndex = allPosts.findIndex(p => p.id === systemId);
 
             if (systemPostIndex === -1) {
@@ -969,6 +1127,7 @@
                     content: logContent,
                     images: [],
                     location: "Dream System",
+                    collection: "更新日志",
                     time: new Date(),
                     likes: 1234,
                     comments: [],
@@ -980,17 +1139,18 @@
                 allPosts.unshift(systemPost);
             } else {
                 allPosts[systemPostIndex].content = logContent;
+                allPosts[systemPostIndex].collection = "更新日志";
                 allPosts[systemPostIndex].isPinned = true;
             }
         }
 
         function createTempUser() {
-            const tempUid = 'temp_' + Math.random().toString(36).substr(2, 9);
+            const tempUid = 'dream_' + Math.random().toString(36).substr(2, 6);
             currentUser = {
                 id: Date.now(),
                 uid: tempUid,
-                name: '访客' + Math.floor(Math.random() * 1000),
-                bio: '单机日记本',
+                name: '梦旅人' + Math.floor(Math.random() * 100),
+                bio: '在这个世界做个好梦',
                 avatar: '',
                 location: '未知',
                 posts: [],
@@ -1000,6 +1160,9 @@
                 isAdmin: false,
                 isTemp: true
             };
+            // 将新用户加入账号列表
+            userAccounts.push(currentUser);
+            localStorage.setItem('userAccounts', JSON.stringify(userAccounts));
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
             showAppPage();
         }
@@ -1082,7 +1245,7 @@
                         updateAudioUI(true);
                     }).catch(error => { 
                         console.error(error); 
-                        showNotice("播放被拦截，请先点击一下页面其他位置"); 
+                        if(!hideRadio) showNotice("播放被拦截，请先点击一下页面其他位置"); 
                     });
                 }
             } else {
@@ -1106,6 +1269,7 @@
         }
 
         document.getElementById('radioTrigger').addEventListener('dblclick', () => {
+            if(hideRadio) return; 
             dreamRadio.classList.remove('hidden');
             dreamRadio.style.bottom = '80px';
             dreamRadio.style.right = '20px';
@@ -1127,7 +1291,7 @@
             }
             if (e.target.closest('.message-context-menu') === null) {
                 document.getElementById('message-context-menu').style.display = 'none';
-            }
+}
         });
 
         document.querySelectorAll('.sound-item').forEach(item => {
@@ -1150,6 +1314,32 @@
             initApp();
             initSettings();
             
+            // --- 搜索功能事件 ---
+            document.getElementById('explore-search-input').addEventListener('input', function(e) {
+                currentSearchTerm = e.target.value.toLowerCase().trim();
+                renderExplorePosts();
+            });
+            // --- 结束 ---
+
+            // --- 隐藏电台设置事件 ---
+            document.getElementById('hide-radio-toggle').addEventListener('change', function() {
+                hideRadio = this.checked;
+                localStorage.setItem('hideRadio', hideRadio);
+                applyRadioVisibility();
+            });
+            // --- 结束 ---
+
+            // --- 账号切换事件绑定 ---
+            document.getElementById('account-switch-option').addEventListener('click', function() {
+                document.getElementById('account-modal').style.display = 'block';
+                renderAccountList();
+            });
+            document.getElementById('close-account-modal').addEventListener('click', function() {
+                document.getElementById('account-modal').style.display = 'none';
+            });
+            document.getElementById('create-account-btn').addEventListener('click', createTempUser); // 创建新号逻辑
+            // --- 结束 ---
+
             document.getElementById('export-data-btn').addEventListener('click', exportData);
             document.getElementById('import-data-btn').addEventListener('click', () => document.getElementById('import-file-input').click());
             document.getElementById('import-file-input').addEventListener('change', importData);
@@ -1244,21 +1434,19 @@
                 }
             });
             document.getElementById('remove-location').addEventListener('click', function() {
-                currentLocation = '';
+currentLocation = '';
                 document.getElementById('location-display').style.display = 'none';
             });
             
             document.getElementById('join-room').addEventListener('click', joinChatRoom);
             document.getElementById('leave-room').addEventListener('click', leaveChatRoom);
-            document.getElementById('send-message').addEventListener('click', sendChatMessage);
+document.getElementById('send-message').addEventListener('click', sendChatMessage);
             document.getElementById('message-input').addEventListener('keypress', function(e) { if (e.key === 'Enter') sendChatMessage(); });
-            
             document.getElementById('chat-image-input').addEventListener('change', function(e) {
                 if(e.target.files && e.target.files[0]) {
-                    // 聊天图片还是需要保持较小体积以免MQTT断开
                     handleImageUpload(e.target.files[0], (base64) => {
                         sendChatImage(base64);
-                    }, 400); // 聊天图片略微调大一点点到400
+                    }, 400); 
                 }
             });
             document.getElementById('cancel-quote').addEventListener('click', cancelQuote);
@@ -1270,7 +1458,7 @@
             });
 
             document.getElementById('logout-btn').addEventListener('click', logout);
-            
+
             const navBtns = document.querySelectorAll('.nav-btn');
             navBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -1313,7 +1501,6 @@
                 const url = prompt('输入链接:', 'https://');
                 if (url) document.execCommand('createLink', false, url);
             });
-            
             document.getElementById('image-viewer-close').addEventListener('click', closeImageViewer);
             document.getElementById('image-viewer-prev').addEventListener('click', showPrevImage);
             document.getElementById('image-viewer-next').addEventListener('click', showNextImage);
@@ -1323,18 +1510,32 @@
                 localStorage.setItem('showUid', showUid);
                 renderAllPosts();
             });
-
             document.getElementById('profile-uid').addEventListener('click', () => {
                 const newUid = prompt('输入新UID:', currentUser.uid);
-                if(newUid && newUid.trim()) { currentUser.uid = newUid.trim(); localStorage.setItem('currentUser', JSON.stringify(currentUser)); updateProfileDisplay(); }
+                if(newUid && newUid.trim()) { 
+                    currentUser.uid = newUid.trim(); 
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser)); 
+                    syncCurrentUserToAccounts(); // 同步更新
+                    updateProfileDisplay(); 
+                }
             });
             document.getElementById('stat-followers').addEventListener('click', () => {
                 const newVal = prompt('输入粉丝数:', currentUser.followers);
-                if(newVal && !isNaN(newVal)) { currentUser.followers = parseInt(newVal); localStorage.setItem('currentUser', JSON.stringify(currentUser)); updateProfileDisplay(); }
+                if(newVal && !isNaN(newVal)) { 
+                    currentUser.followers = parseInt(newVal); 
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser)); 
+                    syncCurrentUserToAccounts(); // 同步更新
+                    updateProfileDisplay(); 
+                }
             });
             document.getElementById('stat-following').addEventListener('click', () => {
                 const newVal = prompt('输入关注数:', currentUser.following);
-                if(newVal && !isNaN(newVal)) { currentUser.following = parseInt(newVal); localStorage.setItem('currentUser', JSON.stringify(currentUser)); updateProfileDisplay(); }
+                if(newVal && !isNaN(newVal)) { 
+                    currentUser.following = parseInt(newVal); 
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser)); 
+                    syncCurrentUserToAccounts(); // 同步更新
+                    updateProfileDisplay(); 
+                }
             });
             
             window.addEventListener('beforeunload', function() {
@@ -1345,11 +1546,87 @@
             });
         });
 
+        // === 新增：同步当前用户信息到账号列表 ===
+        function syncCurrentUserToAccounts() {
+            const idx = userAccounts.findIndex(u => u.id === currentUser.id);
+            if(idx !== -1) {
+                userAccounts[idx] = currentUser;
+                localStorage.setItem('userAccounts', JSON.stringify(userAccounts));
+            }
+        }
+        // === 结束 ===
+
+        // === 新增：账号管理功能 ===
+        function renderAccountList() {
+            const list = document.getElementById('account-list');
+            list.innerHTML = '';
+            userAccounts.forEach(account => {
+                const item = document.createElement('div');
+                item.className = `account-item ${account.uid === currentUser.uid ? 'active' : ''}`;
+                const avatar = account.avatar || "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+                item.innerHTML = `
+                    <img src="${avatar}" class="account-avatar">
+                    <div class="account-info">
+                        <div class="account-name">${account.name}</div>
+                        <div class="account-uid">UID: ${account.uid}</div>
+                    </div>
+                `;
+                if(account.uid !== currentUser.uid || userAccounts.length > 1) { // 如果是当前号且只有一个号，不显示删除
+                    const removeBtn = document.createElement('div');
+                    removeBtn.className = 'account-action';
+                    removeBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                    removeBtn.title = "移除账号";
+                    removeBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        // 移除账号逻辑
+                        if(confirm('确定要移除该账号吗？(数据仍保留在帖子中)')) {
+                            const newAccounts = userAccounts.filter(u => u.uid !== account.uid);
+                            userAccounts = newAccounts;
+                            localStorage.setItem('userAccounts', JSON.stringify(userAccounts));
+                            if(account.uid === currentUser.uid) {
+                                // 如果删的是当前号，且还有其他号，切到第一个，否则创建新号
+                                if(userAccounts.length > 0) {
+                                    switchAccount(userAccounts[0].uid);
+                                } else {
+                                    createTempUser();
+                                }
+                            } else {
+                                renderAccountList();
+                            }
+                        }
+                    };
+                    item.appendChild(removeBtn);
+                }
+                
+                item.onclick = (e) => {
+                    if(e.target.closest('.account-action')) return;
+                    if(account.uid !== currentUser.uid) {
+                        switchAccount(account.uid);
+                    }
+                };
+                list.appendChild(item);
+            });
+        }
+
+        function switchAccount(uid) {
+            const target = userAccounts.find(u => u.uid === uid);
+            if(target) {
+                // 保存当前状态后再切换
+                syncCurrentUserToAccounts();
+                currentUser = target;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                location.reload(); // 刷新以应用新身份
+            }
+        }
+        // === 结束 ===
+
         function exportData() {
+            refreshCollectionsData();
             const data = {
-                version: 1.0,
+                version: 1.2, 
                 timestamp: new Date().toISOString(),
                 currentUser: JSON.parse(localStorage.getItem('currentUser')),
+                userAccounts: JSON.parse(localStorage.getItem('userAccounts')), // 导出多账号
                 allPosts: JSON.parse(localStorage.getItem('allPosts')),
                 drafts: JSON.parse(localStorage.getItem('drafts')),
                 settings: {
@@ -1358,7 +1635,9 @@
                     currentSound: localStorage.getItem('currentSound'),
                     customMusicUrl: localStorage.getItem('customMusicUrl'),
                     bgImage: localStorage.getItem('bgImage'),
-                    bgOverlayOpacity: localStorage.getItem('bgOverlayOpacity')
+                    bgOverlayOpacity: localStorage.getItem('bgOverlayOpacity'),
+                    userCustomCSS: localStorage.getItem('userCustomCSS'),
+                    hideRadio: localStorage.getItem('hideRadio') // 导出隐藏设置
                 }
             };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
@@ -1380,6 +1659,7 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     if (data.currentUser) localStorage.setItem('currentUser', JSON.stringify(data.currentUser));
+                    if (data.userAccounts) localStorage.setItem('userAccounts', JSON.stringify(data.userAccounts));
                     if (data.allPosts) localStorage.setItem('allPosts', JSON.stringify(data.allPosts));
                     if (data.drafts) localStorage.setItem('drafts', JSON.stringify(data.drafts));
                     if (data.settings) {
@@ -1389,31 +1669,33 @@
                         if(data.settings.customMusicUrl) localStorage.setItem('customMusicUrl', data.settings.customMusicUrl);
                         if(data.settings.bgImage) localStorage.setItem('bgImage', data.settings.bgImage);
                         if(data.settings.bgOverlayOpacity) localStorage.setItem('bgOverlayOpacity', data.settings.bgOverlayOpacity);
+                        if(data.settings.userCustomCSS) localStorage.setItem('userCustomCSS', data.settings.userCustomCSS);
+                        if(data.settings.hideRadio) localStorage.setItem('hideRadio', data.settings.hideRadio);
                     }
                     alert('数据导入成功，页面将刷新。');
                     location.reload();
                 } catch (error) {
                     console.error(error);
                     alert('导入失败：文件格式错误');
-                }
+}
             };
             reader.readAsText(file);
             event.target.value = '';
         }
 
         function initSettings() {
-            // 1. === 新增：加载自定义 CSS 并应用 ===
             const savedCss = localStorage.getItem('userCustomCSS') || '';
             const cssInput = document.getElementById('custom-css-input');
             if(cssInput) cssInput.value = savedCss;
             applyCustomCSS(savedCss);
 
-            // 2. === 原有功能：初始化夜间模式 ===
             const darkMode = localStorage.getItem('darkMode') === 'true';
             document.getElementById('dark-mode-toggle').checked = darkMode;
             if (darkMode) document.body.classList.add('dark-mode');
             
-            // 3. === 原有功能：自定义音乐和背景 ===
+            // 初始化隐藏电台开关状态
+            document.getElementById('hide-radio-toggle').checked = hideRadio;
+
             const customMusicUrl = localStorage.getItem('customMusicUrl');
             if(customMusicUrl) document.getElementById('music-url').value = customMusicUrl;
             
@@ -1425,7 +1707,6 @@
             document.getElementById('bg-opacity-slider').value = bgOpacity;
             document.getElementById('opacity-val').textContent = Math.round(bgOpacity * 100) + '%';
             
-            // 4. === 事件监听器 ===
             document.getElementById('dark-mode-toggle').addEventListener('change', function() {
                 if (this.checked) {
                     document.body.classList.add('dark-mode');
@@ -1437,7 +1718,6 @@
             });
         }
 
-        // === 新增：应用 CSS 的核心函数 (放在外面) ===
         function applyCustomCSS(cssContent) {
             let styleTag = document.getElementById('user-defined-style');
             if (!styleTag) {
@@ -1448,7 +1728,7 @@
             styleTag.textContent = cssContent;
         }
 
-            function applyBackground(urlOrBase64, save = true) {
+        function applyBackground(urlOrBase64, save = true) {
             if (urlOrBase64 === 'none' || !urlOrBase64) {
                 document.documentElement.style.setProperty('--bg-image', 'none');
                 if(save) localStorage.removeItem('bgImage');
@@ -1462,7 +1742,7 @@
 
         // 优化图片上传质量：默认最大宽度1280，质量0.9
         function handleImageUpload(file, callback, maxWidth = 1280) {
-            if (!file) return;
+if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
@@ -1475,7 +1755,6 @@
                     canvas.width = width;
                     canvas.height = height;
                     canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-                    // 提升压缩质量到 0.9 (原0.7)
                     callback(canvas.toDataURL('image/jpeg', 0.9));
                 }
                 img.src = e.target.result;
@@ -1510,10 +1789,16 @@
         }
 
         function switchPage(pageId) {
-            document.querySelectorAll('#app-page .page').forEach(page => page.classList.remove('active'));
+document.querySelectorAll('#app-page .page').forEach(page => page.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             if (pageId !== 'post-detail-page') document.querySelector('body').classList.remove('post-detail-page');
-            if (pageId === 'home-page' || pageId === 'explore-page') renderAllPosts();
+            
+            if (pageId === 'home-page' || pageId === 'explore-page') {
+                renderAllPosts();
+            } else {
+                renderCollectionsNav(); 
+            }
+            
             if (pageId === 'profile-page') renderUserPosts();
         }
 
@@ -1533,9 +1818,11 @@
 
         function publishPost() {
             if (!currentUser) { showNotice('请先登录'); return; }
-            let editor = document.querySelector('.editor-content');
+let editor = document.querySelector('.editor-content');
             let content = editor.innerHTML;
             let textOnly = editor.innerText.trim();
+            let collection = document.getElementById('collection-input').value.trim();
+            
             if (!textOnly && selectedImages.length === 0) return showNotice('请输入内容或添加图片');
             try {
                 if(editingPostId) {
@@ -1544,6 +1831,7 @@
                         allPosts[postIndex].content = content;
                         allPosts[postIndex].images = selectedImages;
                         allPosts[postIndex].location = currentLocation;
+                        allPosts[postIndex].collection = collection;
                         localStorage.setItem('allPosts', JSON.stringify(allPosts));
                         editingPostId = null;
                         showNotice('帖子已更新');
@@ -1559,6 +1847,7 @@
                         content,
                         images: selectedImages,
                         location: currentLocation,
+                        collection: collection,
                         time: new Date(),
                         likes: 0, comments: [], favorites: 0,
                         liked: false, isFeatured: false, isPinned: false
@@ -1567,17 +1856,22 @@
                     allPosts.unshift(newPost);
                     currentUser.posts.unshift(newPost.id);
                     localStorage.setItem('allPosts', JSON.stringify(allPosts));
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    showNotice('发布成功！');
                     
-                    // 帖子数实时更新
+                    // 同步到账号列表
+                    syncCurrentUserToAccounts();
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    showNotice('发布成功！');
                     updateProfileDisplay();
                 }
+                
                 editor.innerHTML = '';
                 selectedImages = [];
                 currentLocation = '';
+                document.getElementById('collection-input').value = '';
                 document.getElementById('location-display').style.display = 'none';
                 renderImagePreview();
+                refreshCollectionsData();
                 switchPage('explore-page');
             } catch (e) {
                 console.error("Publish Error:", e);
@@ -1588,8 +1882,10 @@
         
         function saveDraft() {
             const content = document.querySelector('.editor-content').innerHTML;
+            const collection = document.getElementById('collection-input').value.trim();
+            
             if(!content && selectedImages.length === 0) return showNotice('草稿为空');
-            const draft = { id: Date.now(), content, images: selectedImages, location: currentLocation, time: new Date() };
+            const draft = { id: Date.now(), content, images: selectedImages, location: currentLocation, collection, time: new Date() };
             try {
                 drafts.push(draft);
                 localStorage.setItem('drafts', JSON.stringify(drafts));
@@ -1603,6 +1899,8 @@
             selectedImages = JSON.parse(JSON.stringify(draft.images));
             currentLocation = draft.location || '';
             document.querySelector('.editor-content').innerHTML = draft.content;
+            document.getElementById('collection-input').value = draft.collection || '';
+            
             if(currentLocation) {
                 document.getElementById('location-display').style.display = 'block';
                 document.getElementById('location-text').innerHTML = '<i class="fas fa-map-marker-alt"></i> ' + currentLocation;
@@ -1621,6 +1919,9 @@
         };
 
         function renderAllPosts() {
+            refreshCollectionsData();
+            renderCollectionsNav();
+            
             renderPinnedPosts();
             renderFeaturedPosts();
             renderExplorePosts();
@@ -1629,6 +1930,7 @@
         function renderPinnedPosts() {
             const container = document.getElementById('pinned-posts');
             container.innerHTML = '';
+            // 置顶帖通常不参与搜索过滤，除非需求特殊，这里保持原样
             allPosts.filter(p => p.isPinned).forEach(p => container.appendChild(createPostElement(p)));
         }
 
@@ -1638,16 +1940,39 @@
             allPosts.filter(p => p.isFeatured && !p.isPinned).forEach(p => container.appendChild(createPostElement(p)));
         }
 
+        // === 修改：发现页渲染增加搜索过滤 ===
         function renderExplorePosts() {
             const container = document.getElementById('explore-posts');
             container.innerHTML = '';
-            const posts = allPosts.filter(p => !p.isPinned);
+            
+            // 基础筛选：非置顶
+            let posts = allPosts.filter(p => !p.isPinned);
+
+            // 合集筛选
+            if (currentCollectionFilter !== 'all') {
+                posts = posts.filter(p => p.collection === currentCollectionFilter);
+            }
+            
+            // 搜索筛选
+            if (currentSearchTerm) {
+                posts = posts.filter(p => {
+                    const contentMatch = p.content.toLowerCase().includes(currentSearchTerm);
+                    const authorMatch = p.author.toLowerCase().includes(currentSearchTerm);
+                    return contentMatch || authorMatch;
+                });
+            }
+
             if(posts.length === 0) {
-                container.innerHTML = '<div class="empty-state"><i class="fas fa-newspaper"></i><p>还没有帖子</p></div>';
+                let emptyMsg = '还没有帖子';
+                if(currentSearchTerm) emptyMsg = `未找到 "${currentSearchTerm}" 相关内容`;
+                else if(currentCollectionFilter !== 'all') emptyMsg = `合集 "${currentCollectionFilter}" 为空`;
+                
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-newspaper"></i><p>${emptyMsg}</p></div>`;
                 return;
             }
             posts.forEach(p => container.appendChild(createPostElement(p)));
         }
+        // === 结束 ===
 
         function renderUserPosts() {
             const container = document.getElementById('user-posts');
@@ -1681,7 +2006,6 @@
                 container.appendChild(draftEl);
             });
         }
-
         function renderFavorites() {
             const container = document.getElementById('favorites-container');
             container.innerHTML = '';
@@ -1699,6 +2023,10 @@
             const uidHtml = showUid ? `<div class="post-uid">UID: ${post.authorUid}</div>` : '';
             const locHtml = post.location ? `<div class="post-location"><i class="fas fa-map-marker-alt"></i> ${post.location}</div>` : '';
             
+            const collectionHtml = post.collection 
+                ? `<div class="post-collection-tag" onclick="filterByCollection('${post.collection}'); event.stopPropagation();"><i class="fas fa-layer-group"></i> ${post.collection}</div>` 
+                : '';
+
             const isSpecialUser = post.author === '诅骨';
             const specialClass = isSpecialUser ? 'special-avatar' : '';
             const avatarSrc = isSpecialUser ? "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" : (post.avatar || '');
@@ -1728,8 +2056,12 @@
                 });
                 html += `</div>`;
             }
-            html += `<div class="post-footer-content">${locHtml}</div>`;
-            html += `
+            
+            html += `<div class="post-footer-content">
+                        ${collectionHtml} 
+                        ${locHtml}
+                     </div>`;
+html += `
                 <div class="post-actions">
                     <div class="post-action ${post.liked?'active':''}" onclick="toggleLike(${post.id})">
                         <i class="${post.liked?'fas':'far'} fa-heart"></i> <span>${post.likes}</span>
@@ -1791,6 +2123,8 @@
             if(post.favorited && !currentUser.favorites.includes(id)) currentUser.favorites.push(id);
             else if(!post.favorited) currentUser.favorites = currentUser.favorites.filter(fid => fid !== id);
             localStorage.setItem('allPosts', JSON.stringify(allPosts));
+            // 同步
+            syncCurrentUserToAccounts();
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
             renderAllPosts();
         };
@@ -1802,6 +2136,7 @@
             selectedImages = JSON.parse(JSON.stringify(post.images));
             currentLocation = post.location || '';
             document.querySelector('.editor-content').innerHTML = post.content;
+            document.getElementById('collection-input').value = post.collection || '';
             if(currentLocation) {
                 document.getElementById('location-display').style.display = 'block';
                 document.getElementById('location-text').innerHTML = '<i class="fas fa-map-marker-alt"></i> ' + currentLocation;
@@ -1812,54 +2147,40 @@
             showNotice('正在编辑帖子...');
         };
 
-        /* 修改后的删除逻辑：视觉上立即移除元素 */
-window.deletePost = function(id) {
-    if(!confirm("确认删除这条帖子吗？")) return;
+        window.deletePost = function(id) {
+            if(!confirm("确认删除这条帖子吗？")) return;
+            const btn = document.querySelector(`.admin-btn.delete[onclick="deletePost(${id})"]`);
+            if(btn) {
+const postCard = btn.closest('.post');
+                if(postCard) {
+                    postCard.style.transition = "all 0.3s ease";
+                    postCard.style.opacity = "0";
+                    postCard.style.transform = "scale(0.9)";
+                    setTimeout(() => postCard.remove(), 300); 
+                }
+            }
+            allPosts = allPosts.filter(p => p.id !== id);
+            localStorage.setItem('allPosts', JSON.stringify(allPosts));
+            
+            if(currentUser) {
+                currentUser.posts = currentUser.posts.filter(pid => pid !== id);
+                currentUser.favorites = currentUser.favorites.filter(fid => fid !== id);
+                // 同步
+                syncCurrentUserToAccounts();
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
 
-    // === 新增：视觉层立即移除 ===
-    // 尝试找到页面上对应的按钮，并通过它找到父级帖子元素直接移除
-    // 这里的 .admin-btn.delete 是我们在 createPostElement 中定义的删除按钮类
-    const btn = document.querySelector(`.admin-btn.delete[onclick="deletePost(${id})"]`);
-    if(btn) {
-        const postCard = btn.closest('.post');
-        if(postCard) {
-            // 添加一个淡出动画效果（可选，不喜欢可以直接 postCard.remove()）
-            postCard.style.transition = "all 0.3s ease";
-            postCard.style.opacity = "0";
-            postCard.style.transform = "scale(0.9)";
-            setTimeout(() => postCard.remove(), 300); // 动效结束后移除 DOM
-        }
-    }
-    // ========================
-
-    // 数据层处理 (保持原有逻辑，防止刷新后出现)
-    allPosts = allPosts.filter(p => p.id !== id);
-    localStorage.setItem('allPosts', JSON.stringify(allPosts));
-    
-    // 更新当前用户的数据
-    if(currentUser) {
-        currentUser.posts = currentUser.posts.filter(pid => pid !== id);
-        currentUser.favorites = currentUser.favorites.filter(fid => fid !== id);
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    }
-
-    // 提示
-    showNotice('帖子已删除');
-    
-    // 数据层更新个人中心显示 (帖子数 -1)
-    setTimeout(() => {
-        updateProfileDisplay();
-        // 如果不在帖子详情页，且没有找到 DOM 元素移除（为了兜底），则重新渲染列表
-        if (!document.body.classList.contains('post-detail-page')) {
-             // 为了性能，如果刚才已经通过 DOM 移除了，其实不需要立即重新渲染 renderAllPosts
-             // 但为了保证数据同步，我们做一个延时刷新或者仅在未找到 DOM 时刷新
-             if(!btn) renderAllPosts(); 
-        } else {
-            // 如果是在详情页删除，直接返回上一页
-            switchPage('explore-page');
-        }
-    }, 300);
-};
+            showNotice('帖子已删除');
+            refreshCollectionsData();
+            setTimeout(() => {
+                updateProfileDisplay();
+                if (!document.body.classList.contains('post-detail-page')) {
+                     if(!btn) renderAllPosts(); 
+                } else {
+                    switchPage('explore-page');
+                }
+            }, 300);
+        };
 
         window.viewPostDetail = function(id) {
             currentPost = allPosts.find(p => p.id === id);
@@ -1956,8 +2277,7 @@ window.deletePost = function(id) {
             localStorage.setItem('allPosts', JSON.stringify(allPosts));
             renderComments();
         };
-
-        window.addComment = function() {
+window.addComment = function() {
             const input = document.getElementById('comment-input');
             if(!input.value.trim()) return;
             const newComment = {
@@ -2028,18 +2348,11 @@ window.deletePost = function(id) {
                 const topicStr = topic.toString();
                 const msgStr = message.toString();
                 if (topicStr.includes('presence')) {
-                    try {
-                        let presenceData;
-                        try {
-                            presenceData = JSON.parse(msgStr);
-                        } catch(e) {
-                            presenceData = { uid: msgStr, status: 'heartbeat' };
-                        }
-                        if (presenceData.status === 'leave') {
-                            delete lastHeartbeats[presenceData.uid];
-                        } else {
-                            lastHeartbeats[presenceData.uid] = Date.now();
-                        }
+try {
+                        let presenceData; // Simplified error handling for presence
+                        try { presenceData = JSON.parse(msgStr); } catch(e) { presenceData = { uid: msgStr, status: 'heartbeat' }; }
+                        if (presenceData.status === 'leave') delete lastHeartbeats[presenceData.uid];
+                        else lastHeartbeats[presenceData.uid] = Date.now();
                         updateOnlineCount();
                     } catch(e) {}
                 } else {
@@ -2053,7 +2366,6 @@ window.deletePost = function(id) {
             });
             mqttClient.on('error', (err) => { document.getElementById('room-status').textContent = '连接错误'; });
         }
-        
         function updateOnlineCount() {
             const now = Date.now();
             let count = 0;
@@ -2104,31 +2416,19 @@ window.deletePost = function(id) {
             const input = document.getElementById('message-input');
             const content = input.value.trim();
             if (!content || !mqttClient || !currentRoom) return;
-            const msg = { 
-                sender: currentUser.name, 
-                uid: currentUser.uid, 
-                avatar: currentUser.avatar, 
-                content, 
-                time: new Date(),
-                quote: currentQuote 
-            };
-            mqttClient.publish(`dream/chat/${currentRoom}`, JSON.stringify(msg));
-            addChatMessage(msg, 'outgoing');
-            input.value = '';
-            cancelQuote();
+            const msg = { sender: currentUser.name, uid: currentUser.uid, avatar: currentUser.avatar, content, time: new Date(), quote: currentQuote };
+            // 保险起见发布
+            try {
+                mqttClient.publish(`dream/chat/${currentRoom}`, JSON.stringify(msg));
+                addChatMessage(msg, 'outgoing');
+                input.value = '';
+                cancelQuote();
+            } catch (e) { showNotice('连接断开'); }
         }
 
         function sendChatImage(base64) {
              if (!mqttClient || !currentRoom) return showNotice("请先进入房间");
-             const msg = {
-                 sender: currentUser.name,
-                 uid: currentUser.uid,
-                 avatar: currentUser.avatar,
-                 content: "[图片]",
-                 image: base64,
-                 time: new Date(),
-                 quote: currentQuote
-             };
+             const msg = { sender: currentUser.name, uid: currentUser.uid, avatar: currentUser.avatar, content: "[图片]", image: base64, time: new Date(), quote: currentQuote };
              try {
                 mqttClient.publish(`dream/chat/${currentRoom}`, JSON.stringify(msg));
                 addChatMessage(msg, 'outgoing');
@@ -2207,7 +2507,8 @@ window.deletePost = function(id) {
         function verifyAdmin() {
             if (document.getElementById('admin-code').value === ADMIN_CODE) {
                 currentUser.isAdmin = true;
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                syncCurrentUserToAccounts();
                 showNotice('已获得管理员权限');
                 updateProfileDisplay();
                 document.getElementById('admin-modal').style.display = 'none';
@@ -2218,6 +2519,7 @@ window.deletePost = function(id) {
             if (confirm('确定要取消管理员权限吗？')) {
                 currentUser.isAdmin = false;
                 localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                syncCurrentUserToAccounts();
                 showNotice('已取消管理员权限');
                 updateProfileDisplay();
                 document.getElementById('admin-modal').style.display = 'none';
@@ -2234,22 +2536,24 @@ window.deletePost = function(id) {
             currentUser.bio = document.getElementById('profile-bio-input').value;
             if (document.getElementById('avatar-preview').src) currentUser.avatar = document.getElementById('avatar-preview').src;
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            syncCurrentUserToAccounts(); // profile 更新也要同步到列表
             updateProfileDisplay();
             toggleEditProfile();
             showNotice('资料已更新');
         }
 
-        /* 修改后的保存设置函数 */
-function saveSettings() {
-    // 1. 保存并在当前页面应用 CSS
-    const customCss = document.getElementById('custom-css-input').value;
-    localStorage.setItem('userCustomCSS', customCss);
-    applyCustomCSS(customCss);
-    
-    // 2. 提示保存成功
-    showNotice('设置与自定义样式已保存'); 
-}
-        function logout() { if(confirm('退出登录?')) { localStorage.removeItem('currentUser'); location.reload(); } }
+        function saveSettings() {
+            const customCss = document.getElementById('custom-css-input').value;
+            localStorage.setItem('userCustomCSS', customCss);
+            applyCustomCSS(customCss);
+            showNotice('设置与自定义样式已保存'); 
+        }
+        function logout() { 
+            if(confirm('退出登录?')) { 
+                localStorage.removeItem('currentUser'); 
+                location.reload(); 
+            } 
+        }
     </script>
 </body>
 </html>
