@@ -780,7 +780,7 @@ body.dark-mode .post-collection-tag {
                         
                         <div style="margin-top:10px;">
                             <label for="bg-image-input" style="font-size:13px; color:var(--gray-dark);">背景图片链接</label>
-                            <input type="text" id="bg-image-input" placeholder="http://...">
+                            <input type="text" id="bg-image-input" placeholder="https://...">
                             <div style="display:flex; gap:10px; margin-top:5px;">
                                  <button class="btn btn-gray" onclick="document.getElementById('bg-file-input').click()" style="flex:1;">
                                     <i class="fas fa-upload"></i> 上传
@@ -2069,9 +2069,6 @@ html += `
                     <div class="post-action" onclick="viewPostDetail(${post.id})">
                         <i class="far fa-comment"></i> <span>${post.comments.length}</span>
                     </div>
-                    <div class="post-action" onclick="copyPostContent(${post.id})" title="复制内容">
-<i class="far fa-copy"></i>
-</div>
                     <div class="post-action ${post.favorited?'active':''}" onclick="toggleFavorite(${post.id})">
                         <i class="${post.favorited?'fas':'far'} fa-bookmark"></i>
                     </div>
@@ -2235,7 +2232,6 @@ const postCard = btn.closest('.post');
                 <div class="comment-content">${comment.content}</div>
                 <div class="comment-actions" style="margin-top:8px; display:flex; gap:15px; font-size:12px; color:var(--gray-medium);">
                     <span class="comment-action" onclick="toggleReply(${comment.id})" style="cursor:pointer;">回复</span>
-                    <span class="comment-action" onclick="copyCommentContent(${currentPost.id}, ${comment.id})" style="cursor:pointer;">复制</span>
                     <span class="comment-action ${isLiked?'active':''}" onclick="likeComment(${currentPost.id}, ${comment.id})" style="cursor:pointer; color:${isLiked?'var(--primary-color)':''}">
                         <i class="${isLiked?'fas':'far'} fa-heart"></i> ${likeCount || ''}
                     </span>
@@ -2552,82 +2548,12 @@ localStorage.setItem('currentUser', JSON.stringify(currentUser));
             applyCustomCSS(customCss);
             showNotice('设置与自定义样式已保存'); 
         }
-                function logout() { 
+        function logout() { 
             if(confirm('退出登录?')) { 
                 localStorage.removeItem('currentUser'); 
                 location.reload(); 
             } 
-        } // <--- 注意这里，logout 函数在这里结束
-
-        // ===== 新增复制功能代码 (放在外面) =====
-        
-        // 核心复制函数：把HTML去掉，只复制纯文本
-                // ===== 新增复制功能代码 (放在 logout 外面) =====
-        
-        // 1. 核心复制函数：兼容 本地文件(file://) 和 网站(https)
-        function copyTextToClipboard(htmlContent) {
-            // 提取纯文本
-            const tempDiv = document.createElement("div");
-            tempDiv.innerHTML = htmlContent;
-            const text = (tempDiv.textContent || tempDiv.innerText || "").trim();
-            
-            if (!text) return showNotice('没有内容可复制');
-
-            // 定义“老式”复制方法（专门解决 file:// 协议不生效的问题）
-            const legacyCopy = (txt) => {
-                const textArea = document.createElement("textarea");
-                textArea.value = txt;
-                // 将输入框藏到视野外，同时避免移动端页面抖动
-                textArea.style.position = "fixed";
-                textArea.style.left = "-9999px"; 
-                textArea.style.top = "0";
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                try {
-                    const successful = document.execCommand('copy');
-                    if(successful) showNotice('复制成功');
-                    else showNotice('复制失败，请手动长按复制');
-                } catch (err) {
-                    console.error('无法复制', err);
-                    showNotice('复制失败');
-                }
-                document.body.removeChild(textArea);
-            };
-
-            // 智能判断使用哪种方式
-            if (!navigator.clipboard || window.location.protocol === 'file:') {
-                legacyCopy(text);
-            } else {
-                navigator.clipboard.writeText(text).then(() => {
-                    showNotice('复制成功');
-                }).catch(err => {
-                    console.warn('新API复制失败，切换回老办法', err);
-                    legacyCopy(text);
-                });
-            }
         }
-
-        // 2. 复制帖子内容的触发器 (之前丢失的)
-        window.copyPostContent = function(id) {
-            const post = allPosts.find(p => p.id === id);
-            if(post) copyTextToClipboard(post.content);
-        };
-
-        // 3. 复制评论内容的触发器 (之前丢失的)
-        window.copyCommentContent = function(postId, commentId) {
-            let comment;
-            if (currentPost && currentPost.id === postId) {
-                // 如果在详情页
-                comment = currentPost.comments.find(c => c.id === commentId);
-            } else {
-                // 如果在列表中
-                const post = allPosts.find(p => p.id === postId);
-                if (post) comment = post.comments.find(c => c.id === commentId);
-            }
-            
-            if(comment) copyTextToClipboard(comment.content);
-        };
     </script>
 </body>
 </html>
