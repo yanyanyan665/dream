@@ -497,6 +497,35 @@
         
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .close { color: var(--gray-medium); font-size: 28px; cursor: pointer; }
+        
+        /* 预设标签样式 */
+.preset-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background-color: var(--hover-color);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.preset-chip:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.preset-chip .delete-preset {
+    color: var(--gray-medium);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.preset-chip .delete-preset:hover {
+    color: #ff4d4d;
+}
 
     </style>
 </head>
@@ -821,7 +850,17 @@
                         <h4>自定义 CSS (美化)</h4>
                         <p style="font-size: 12px; color: var(--gray-medium); margin-bottom: 5px;">在此处输入 CSS 代码可覆盖默认样式：</p>
                         <textarea id="custom-css-input" rows="6" placeholder=".post { border-radius: 20px; } body { font-family: '楷体'; }" style="width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background-color: var(--card-bg); color: var(--text-color); font-family: monospace; resize: vertical;"></textarea>
-                    </div>
+                       
+                         <!-- 新增：预设管理区域 -->
+    <div style="margin-top: 15px; display: flex; gap: 8px;">
+        <input type="text" id="preset-name-input" placeholder="预设名称 (如: 极简蓝)" style="flex: 1; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px;">
+        <button class="btn" id="save-preset-btn" style="padding: 8px 15px; font-size: 13px;">保存为预设</button>
+    </div>
+
+    <div id="css-presets-container" style="margin-top: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
+        <!-- 预设按钮会通过 JS 动态生成在这里 -->
+    </div>
+</div>
 
                     <button class="btn btn-block btn-gray" id="clear-cache-btn" style="margin-top:10px;">
                         <i class="fas fa-trash-alt"></i> 清除缓存
@@ -2474,7 +2513,8 @@
                         bgImage: localStorage.getItem('bgImage'),
                         bgOverlayOpacity: localStorage.getItem('bgOverlayOpacity'),
                         userCustomCSS: localStorage.getItem('userCustomCSS'),
-                        hideRadio: localStorage.getItem('hideRadio')
+                        hideRadio: localStorage.getItem('hideRadio'),
+                        cssPresets: localStorage.getItem('cssPresets') 
                     }
                 };
                 
@@ -2518,6 +2558,7 @@
                         if(data.settings.bgOverlayOpacity) localStorage.setItem('bgOverlayOpacity', data.settings.bgOverlayOpacity);
                         if(data.settings.userCustomCSS) localStorage.setItem('userCustomCSS', data.settings.userCustomCSS);
                         if(data.settings.hideRadio) localStorage.setItem('hideRadio', data.settings.hideRadio);
+                        if(data.settings.cssPresets) localStorage;setItem('cssPresets', data.settings.cssPresets);
                     } else {
                         // 兼容旧版本导出的数据 (没有 settings 对象的情况)
                         if (data.currentUser) localStorage.setItem('currentUser', JSON.stringify(data.currentUser)); // 兼容旧习惯作为备份
@@ -2533,6 +2574,84 @@
             reader.readAsText(file);
             event.target.value = ''; // 清空 input 防止重复选择同一文件不触发 change
         }
+        
+        // === 美化预设功能逻辑 ===
+
+// 1. 初始化加载预设列表
+function renderPresets() {
+    const container = document.getElementById('css-presets-container');
+    const presets = JSON.parse(localStorage.getItem('cssPresets') || '[]');
+    container.innerHTML = '';
+
+    if (presets.length === 0) {
+        container.innerHTML = '<span style="font-size:12px; color:var(--gray-medium);">暂无保存的预设</span>';
+        return;
+    }
+
+    presets.forEach((preset, index) => {
+        const chip = document.createElement('div');
+        chip.className = 'preset-chip';
+        // 点击芯片：将预设 CSS 填入文本框并立即应用
+        chip.onclick = () => {
+            document.getElementById('custom-css-input').value = preset.css;
+            applyCustomCSS(preset.css);
+            showNotice(`已切换到预设：${preset.name}`);
+        };
+
+        chip.innerHTML = `
+            <span>${preset.name}</span>
+            <span class="delete-preset" title="删除预设">×</span>
+        `;
+
+        // 删除按钮点击事件
+        chip.querySelector('.delete-preset').onclick = (e) => {
+            e.stopPropagation(); // 防止触发父级的点击应用事件
+            if(confirm(`确定删除预设 "${preset.name}" 吗？`)) {
+                deletePreset(index);
+            }
+        };
+
+        container.appendChild(chip);
+    });
+}
+
+// 2. 保存新预设
+function saveCurrentAsPreset() {
+    const nameInput = document.getElementById('preset-name-input');
+    const cssInput = document.getElementById('custom-css-input');
+    const name = nameInput.value.trim();
+    const css = cssInput.value.trim();
+
+    if (!name) return showNotice('请输入预设名称');
+    if (!css) return showNotice('当前 CSS 为空');
+
+    const presets = JSON.parse(localStorage.getItem('cssPresets') || '[]');
+    presets.push({ name, css });
+    localStorage.setItem('cssPresets', JSON.stringify(presets));
+
+    nameInput.value = ''; // 清空名称输入框
+    renderPresets();
+    showNotice('预设保存成功');
+}
+
+// 3. 删除预设
+function deletePreset(index) {
+    const presets = JSON.parse(localStorage.getItem('cssPresets') || '[]');
+    presets.splice(index, 1);
+    localStorage.setItem('cssPresets', JSON.stringify(presets));
+    renderPresets();
+}
+
+// 4. 将预设功能绑定到按钮
+// (这段代码放在 bindEventListeners 里更好，这里为了新手方便直接写个小初始化)
+function initPresetSystem() {
+    const saveBtn = document.getElementById('save-preset-btn');
+    if(saveBtn) {
+        saveBtn.onclick = saveCurrentAsPreset;
+    }
+    renderPresets();
+}
+
         // ===== 补全遗漏：设置初始化与自定义样式逻辑 =====
 
         function initSettings() {
@@ -2572,6 +2691,7 @@
             document.documentElement.style.setProperty('--overlay-opacity', bgOpacity);
             document.getElementById('bg-opacity-slider').value = bgOpacity;
             document.getElementById('opacity-val').textContent = Math.round(bgOpacity * 100) + '%';
+            initPresetSystem();
         }
 
         function applyCustomCSS(cssContent) {
